@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}骑手信箱 - 个人信息{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h2 class="translatable">账号信息</h2>
+    
+    <form action="{{ url_for('profile') }}" method="post">
+
+        <div class="form-group">
+            <label for="username" class="translatable">账号名</label>
+            <input type="text" id="username" name="username" value="{{ user.username or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="real_name" class="translatable">姓名</label>
+            <input type="text" id="real_name" name="real_name" value="{{ user.real_name or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="id_card" class="translatable">身份证号</label>
+            <input type="text" id="id_card" name="id_card" value="{{ user.id_card or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="phone" class="translatable">手机号码</label>
+            <input type="tel" id="phone" name="phone" value="{{ user.phone or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="qq" class="translatable">QQ</label>
+            <input type="text" id="qq" name="qq" value="{{ user.qq or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="wechat" class="translatable">微信</label>
+            <input type="text" id="wechat" name="wechat" value="{{ user.wechat or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="email" class="translatable">邮箱</label>
+            <input type="email" id="email" name="email" value="{{ user.email or '' }}">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">保存信息</button>
+            <a href="{{ url_for('mailbox') }}" class="btn btn-secondary translatable">返回信箱</a>
+            <a href="{{ url_for('change_password') }}" class="btn btn-secondary translatable">更改密码</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

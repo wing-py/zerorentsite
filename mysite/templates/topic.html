@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}零抽成开发外包平台 - 平台论坛{% endblock %}
+
+{% block content %}
+
+    <title>{{ topic_name }}</title>
+    <style>
+        .comment-list {
+            margin-top: 20px;
+        }
+        
+        .comment {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .comment-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .comment-content {
+            font-family: monospace;
+            white-space: pre-wrap; /* 保留换行符 */
+            margin-left: 10px;
+            line-height: 1.5;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            max-height: 500px; /* 初始高度限制 */
+            overflow: hidden; /* 超出部分隐藏 */
+            position: relative;
+            overflow-y: auto; /* 超出部分显示滚动条 */
+        }
+
+        .toggle-btn {
+            margin-left: 10px;
+            font-size: 0.8em;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .expanded {
+            max-height: none;
+        }
+        
+        .comment-form {
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 2px solid #eee;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        
+        textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <h1>{{ topic_name }}</h1>
+    
+    <div class="comment-list">
+        {% for comment in comments %}
+        <div class="comment">
+            <div class="comment-header">
+                {{ comment.username }}
+                <span class="toggle-btn" onclick="toggleContent(this)">展开</span>
+            </div>
+            
+            <pre class="comment-content">{{ comment.content }}</pre>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="comment-form">
+        <h3>发表评论</h3>
+        <form method="POST">
+            <textarea name="content" placeholder="评论内容" rows="4" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd;"></textarea>
+            <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer;">提交</button>
+        </form>
+    </div>
+
+
+    <script>
+    function toggleContent(btn) {
+            const content = btn.parentElement.parentElement.children[1];
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                btn.textContent = '展开';
+            } else {
+                content.classList.add('expanded');
+                btn.textContent = '折叠';
+            }
+        }
+    </script>
+{% endblock %}
+

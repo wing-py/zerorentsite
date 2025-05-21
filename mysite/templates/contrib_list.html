@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}零抽成 - 贡献榜{% endblock %}
+
+{% block content %}
+
+<style>
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.contrib-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.contrib-table th, .contrib-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.contrib-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333;
+}
+
+.contrib-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.contrib-table tr:hover {
+    background-color: #eaeaea;
+}
+
+/* 添加分隔线 */
+.contrib-table tbody tr td:first-child {
+    border-left: 2px solid #ddd;
+}
+
+.contrib-table tbody tr td:last-child {
+    border-right: 2px solid #ddd;
+}
+
+/* 表头和表尾的分隔线 */
+.contrib-table thead tr th {
+    border-bottom: 2px solid #ddd;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .contrib-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+</style>
+
+    <div class="container">
+        <h1>贡献榜</h1>
+        <table class="contrib-table">
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>客户名</th>
+                    <th>下单日期</th>
+                    <th>贡献值</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in contrib_data %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item['客户名'] }}</td>
+                    <td>{{ item['下单日期'] }}</td>
+                    <td>{{ item['贡献值'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

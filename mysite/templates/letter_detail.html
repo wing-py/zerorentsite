@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}骑手信箱 - 查看信函{% endblock %}
+
+{% block content %}
+    <div class="letter-detail">
+        <div class="letter-header">
+            <h2 class="translatable">{{ letter.title }}</h2>
+            <div class="letter-info">
+                <span class="category translatable">{{ letter.category }}</span>
+                <span class="date translatable">{{ letter.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                {% if letter.user %}
+                    <span class="author translatable">作者: {{ letter.author.username }}</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="letter-content">
+            {{ letter.content|safe }}
+        </div>
+        
+        {% if letter.attachments %}
+            <div class="attachments">
+                <h3 class="translatable">附件</h3>
+                <div class="attachments-grid">
+                    {% for attachment in letter.attachments %}
+                        <div class="attachment-item">
+                            <img src="{{ url_for('static', filename='images/uploads/' + attachment.filename) }}" alt="{{ attachment.filename }}">
+                            <p class="translatable">{{ attachment.filename }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        
+        <div class="letter-footer">
+            <span class="display-permission translatable">公开展示意见: {{ letter.display_permission }}</span>
+            <span class="ip-info translatable">发送IP: {{ letter.ip_address }}</span>
+        </div>
+        
+        <div class="letter-actions">
+            <a href="{{ url_for('mailbox') }}" class="btn btn-secondary translatable">返回信箱</a>
+        </div>
+    </div>
+{% endblock %}

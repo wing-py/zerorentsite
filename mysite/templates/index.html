@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}零抽成 - 首页{% endblock %}
+
+{% block content %}
+    <div class="hero">
+        <h2 class="translatable">欢迎来到零抽成外包平台</h2>
+        <p class="translatable">这里是零抽成开发外包平台的公开网站</p>
+    </div>
+
+    <div class="features">
+        <a href="{{ url_for('about') }}">
+            <div class="feature">
+                <h3 class="translatable">平台介绍</h3>
+                <p class="translatable">介绍零抽成外包平台的目标、运行机制和运营战略</p>
+            </div>
+        </a>
+
+        <a href="{{ url_for('forum') }}">
+            <div class="feature">
+                <h3 class="translatable">意见论坛</h3>
+                <p class="translatable">收集和公开讨论对平台的各种建议意见</p>
+            </div>
+        </a>
+
+        <div class="feature">
+            <h3 class="translatable">发展规划</h3>
+            <p class="translatable">目前关于组织以及相关程序设施建设的待办事项</p>
+        </div>
+
+        <a href="{{ url_for('support') }}">
+        <div class="feature">
+            <h3 class="translatable">提供支持</h3>
+            <p class="translatable">您可以为组织以及其建设提供支持</p>
+        </div>
+        </a>
+
+        <div class="feature">
+            <h3 class="translatable">相关文档</h3>
+            <p class="translatable">相关的文档资料</p>
+        </div>
+
+
+        <div class="feature">
+            <h3 class="translatable">AI服务</h3>
+            <p class="translatable">我们使用AI进行信息服务,并尝试使用AI管理组织!</p>
+        </div>
+
+        {% if session.user_id %}
+        <a href="{{ url_for('profile') }}">
+        <div class="feature">
+            <h3 class="translatable">账号管理</h3>
+            <p class="translatable">填写账号个人信息，方便整理归档和进一步沟通</p>
+        </div>
+        </a>
+        {% endif %}
+
+        <a href="{{ url_for('compose') }}">
+        <div class="feature">
+            <h3 class="translatable">撰写信件</h3>
+            <p class="translatable">收集人们的意见、看法和诉求</p>
+        </div>
+        </a>
+
+        <a href="{{ url_for('mailbox') }}">
+        <div class="feature">
+            <h3 class="translatable">信件阅览</h3>
+            <p class="translatable">浏览其他人的信件，了解大家的想法和建议</p>
+        </div>
+        </a>
+
+        <a href="{{ url_for('disclosure') }}">
+            <div class="feature">
+                <h3 class="translatable">信息公示</h3>
+                <p class="translatable">对资产、人员和组织制度的信息透明公示</p>
+            </div>
+        </a>
+    </div>
+{% endblock %}

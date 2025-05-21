@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}骑手信箱 - 撰写信函{% endblock %}
+
+{% block content %}
+    <h2 class="translatable">撰写信函</h2>
+    
+    <form action="{{ url_for('compose') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title" class="translatable">标题</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="content" class="translatable">内容</label>
+            <textarea id="content" name="content" rows="10" required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="category" class="translatable">信件类别</label>
+            <select id="category" name="category" required>
+                <option value="" class="translatable">请选择类别</option>
+                <option value="技术支持诉求" class="translatable">技术支持诉求</option>
+                <option value="组织机制建议" class="translatable">组织机制建议</option>
+                <option value="问题反馈" class="translatable">问题反馈</option>
+                <option value="个人看法" class="translatable">个人看法</option>
+                <option value="其他" class="translatable">其他</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="display_permission" class="translatable">公开展示意见</label>
+            <select id="display_permission" name="display_permission">
+                <option value="希望展示" class="translatable">希望展示</option>
+                <option value="不介意展示" class="translatable">不介意展示</option>
+                <option value="拒绝展示" class="translatable">拒绝展示</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="attachments" class="translatable">附件 (可选)</label>
+            <input type="file" id="attachments" name="attachments" multiple accept="image/*">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary translatable">发送信函</button>
+            <a href="{{ url_for('mailbox') }}" class="btn btn-secondary translatable">取消</a>
+        </div>
+    </form>
+{% endblock %}

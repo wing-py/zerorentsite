@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}布晴山 - 信息公示{% endblock %}
+
+{% block content %}
+    <h2 class="translatable">信息公示</h2>
+
+    <div class="disclosure-container">
+        <!-- 资产信息 -->
+        <section class="disclosure-section">
+            <h3 class="translatable">资产</h3>
+
+            <div class="assets">
+                <div class="asset-item">
+                    <h4 class="translatable">收入</h4>
+                    <ul>
+                        <li class="translatable">...</li>
+                        <!-- 可以根据实际情况添加更多收入来源 -->
+                    </ul>
+                </div>
+
+                <div class="asset-item">
+                    <h4 class="translatable">支出</h4>
+                    <ul>
+                        <li class="translatable">劳动报酬</li>
+                        <li class="translatable">公共资产积累再生产</li>
+                        <!-- 可以根据实际情况添加更多支出项目 -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 人员组织结构 -->
+        <section class="disclosure-section">
+            <h3 class="translatable">人员组织结构</h3>
+
+            <div class="org-level">
+                <div class="org-node translatable">种植组</div>
+                <div class="org-node translatable">养殖组</div>
+                <div class="org-node translatable">媒体组</div>
+            </div>
+
+            <div class="organization-chart">
+                <div class="org-level">
+                    <div class="org-node translatable">股东</div>
+                    <div class="org-node translatable">劳动者</div>
+                </div>
+
+
+            </div>
+        </section>
+
+        <!-- 宪章 -->
+        <section class="disclosure-section">
+            <h3 class="translatable">宪章</h3>
+
+            <div class="constitution">
+                <p class="translatable">本平台致力于构建一个公平、透明、高效的劳动者合作生态系统。所有参与者都将遵循以下原则：</p>
+                <ul>
+                    <li class="translatable">公开透明的收入分配机制</li>
+                    <li class="translatable">民主决策的组织管理模式</li>
+                    <li class="translatable">持续发展的公共资产积累</li>
+                    <li class="translatable">劳动者权益优先保障</li>
+                    <li class="translatable">技术驱动的服务优化</li>
+                </ul>
+                <!-- 根据实际情况补充宪章内容 -->
+            </div>
+        </section>
+    </div>
+{% endblock %}

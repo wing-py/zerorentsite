@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}零抽成开发外包平台 - 平台论坛{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    {% if topics %}
+    <div class="features">
+        {% for topic in topics %}
+        <a href="/forum/topic/{{ topic }}">
+        <div class="feature" data-tab="{{ topic }}">
+            <h3 class="translatable">{{ topic }}</h3>
+            <p></p>
+        </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="translatable">没有找到话题</div>
+    {% endif %}
+
+    <div class="content"></div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}布晴山 - 布晴山农场产品简介{% endblock %}
+
+{% block content %}
+    <style>
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .product-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-title {
+            font-size: 20px;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FF5722;
+            margin-bottom: 10px;
+        }
+        .product-description {
+            font-size: 14px;
+            color: #666;
+        }
+        .contact-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .contact-title {
+            font-size: 22px;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+        .contact-info {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+        .cta-button:hover {
+            background-color: #388E3C;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+
+    <h1>布晴山农场产品简介</h1>
+
+    <div class="product-container">
+        <div class="product-card">
+            <div class="product-title">1. 白脚芦花鸡</div>
+            <div class="product-price">168元/只</div>
+            <div class="product-description">
+                使用中草药有机蔬菜喂养的跑山鸡，比市面土鸡略贵，但更加营养美味！肉嫩爽滑，炖煮煲炒皆宜。
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">2. 鸡蛋</div>
+            <div class="product-price">48元/盒（20枚）</div>
+            <div class="product-description">
+                白脚芦花鸡鸡蛋，新鲜土鸡蛋。
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">3. 桂味荔枝</div>
+            <div class="product-price">48元5斤 | 88元10斤</div>
+            <div class="product-description">
+                广东惠州40年老树龄桂味荔枝，六月中旬成熟后手工采摘发货，果期较短，只有十多天，建议在此预售下单，避免错过果期！
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">4. 酱香豆干</div>
+            <div class="product-price">
+                23元/4袋常规款（150g/袋）<br>
+                18元/2袋家庭款（300g/袋）
+            </div>
+            <div class="product-description">
+                正宗平江酱香干首批尝鲜价，鸡汤熬制，两小时小火慢炖，纯手工制作。Q弹鲜辣，片片入味，唇齿留香。
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">5. 共创躺平项目</div>
+            <div class="product-price">
+                88元/日 | 350元/周 | 1000元/月
+            </div>
+            <div class="product-description">
+                乡村集体生活劳动体验，提供吃住，露营、烧烤游玩、组织读书会自律学习。
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">6. 钓鱼卡</div>
+            <div class="product-price">128元/次</div>
+            <div class="product-description">
+                5月中旬开放，让您在山水间放松身心，享受垂钓乐趣。
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-title">7. 农场漫游卡</div>
+            <div class="product-price">20元/次</div>
+            <div class="product-description">
+                5月中旬开放，露营、烧烤、摄影写生，观赏各种动物，尽情拥抱大自然。
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-section">
+        <div class="contact-title">购买方式</div>
+        <div class="contact-info">
+            添加布晴山客服微信回复产品名购买
+        </div>
+        <div class="contact-info">
+            联系电话：17325812129（微信同号）
+        </div>
+        <div class="contact-info">
+            座机：075-26161893
+        </div>
+        <a href="https://weixin.qq.com" class="cta-button">立即联系客服</a>
+    </div>
+
+    <footer>
+        <p>布晴山农场 - 集体生产，品质保证！感谢同志们对集体事业的关注和支持！</p>
+    </footer>
+
+{% endblock %}

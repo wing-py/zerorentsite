@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}骑手信箱 - 信箱{% endblock %}
+
+{% block content %}
+    <h2 class="translatable">信函列表</h2>
+    
+    <div class="search-bar">
+        <form action="{{ url_for('search') }}" method="get">
+            <input type="text" name="q" placeholder="搜索信函..." value="{{ request.args.get('q', '') }}" class="translatable">
+            <button type="submit" class="translatable">搜索</button>
+        </form>
+    </div>
+    
+    <div class="letters-list">
+        {% for letter in letters %}
+            <div class="letter-card">
+                <div class="letter-header">
+                    <h3 class="translatable"><a href="{{ url_for('view_letter', letter_id=letter.id) }}" class="translatable">{{ letter.title }}</a></h3>
+                    <span class="category translatable">{{ letter.category }}</span>
+                </div>
+                <div class="letter-content">
+                    <p class="translatable">{{ letter.content[:100] }}{% if letter.content|length > 100 %}...{% endif %}</p>
+                </div>
+                <div class="letter-meta">
+                    <span class="date translatable">{{ letter.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    {% if letter.user %}
+                        <span class="author translatable">作者: {{ letter.author.username }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p class="no-letters translatable">暂无信函</p>
+        {% endfor %}
+    </div>
+{% endblock %}

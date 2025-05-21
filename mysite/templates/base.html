@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}零抽成开发外包平台{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1">
+    {% block extra_css %}{% endblock %}
+</head>
+<body style="background-image: url('/static/images/background.jpg'); background-size: cover; background-repeat: no-repeat;">
+    <header>
+        <div class="container">
+            <h1 class="translatable">零抽成平台测试网站</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}" class="translatable">首页</a></li>
+                    <li><a href="{{ url_for('about') }}" class="translatable">介绍</a></li>
+                    <li><a href="{{ url_for('forum') }}" class="translatable">论坛</a></li>
+                    <li><a href="{{ url_for('submit_order') }}" class="translatable">发布订单</a></li>
+                    <li><a href="{{ url_for('list_order') }}" class="translatable">浏览订单</a></li>
+                    <li><a href="{{ url_for('list_worker') }}" class="translatable">寻找开发者</a></li>
+                    {% if session.user_id %}
+                        <li><a href="{{ url_for('profile') }}" class="translatable">个人信息</a></li>
+                        <li><a href="{{ url_for('logout') }}" class="translatable">注销({{ session.username }})</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}" class="header-button"><span class="translatable">登录</span></a></li>
+                        <li><a href="{{ url_for('register') }}" class="header-button"><span class="translatable">注册</span></a></li>
+                    {% endif %}
+                    <li>
+                        <select id="language-selector">
+                            <option value="zh-CN">中文</option>
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                            <option value="ja">日本語</option>
+                            <option value="ko">한국어</option>
+                            <option value="ru">Русский</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="translatable">&copy; 2025 零抽成外包平台公开网站</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

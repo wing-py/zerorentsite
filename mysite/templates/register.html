@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}骑手信箱 - 注册{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h2 class="translatable">用户注册</h2>
+    
+    <form action="{{ url_for('register') }}" method="post">
+        <div class="form-group">
+            <label for="username" class="translatable">用户名</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password" class="translatable">密码</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password" class="translatable">确认密码</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="translatable">邮箱 (可选)</label>
+            <input type="email" id="email" name="email">
+        </div>
+        
+        <div class="form-group">
+            <label for="phone" class="translatable">手机号码 (可选)</label>
+            <input type="tel" id="phone" name="phone">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary translatable">注册</button>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary translatable">已有账号？去登录</a>
+        </div>
+    </form>
+
+    <!-- 第三方登录按钮 -->
+    <div class="social-login">
+        <p class="translatable">微信登录、QQ登录、手机验证码登录、邮箱绑定待开发</p>
+    </div>
+</div>
+{% endblock %}

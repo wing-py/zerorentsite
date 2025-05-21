@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}零抽成 - 支持我们{% endblock %}
+
+{% block content %}
+    <h2 class="translatable">支持我们</h2>
+
+    <p class="translatable">欢迎加入我们的社区，共同支持和推动劳动者合作平台的发展。以下是您可以支持我们的方式：</p>
+
+    <div class="support-container">
+        <div class="support-card">
+            <h3 class="translatable">成为组织成员</h3>
+            <p class="translatable">加入我们的团队，参与农业生产劳动实践，同时获得公平的报酬和保障。</p>
+            <a href="{{ url_for('register_rider') }}" class="btn btn-primary translatable">申请成为成员</a>
+        </div>
+
+        <div class="support-card">
+            <h3 class="translatable">开发软件设施</h3>
+            <p class="translatable">如果您对编程感兴趣，欢迎参与我们的平台开发，帮助我们改进和优化软件设施，提升用户体验。</p>
+            <a href="{{ url_for('dev_contribution') }}" class="btn btn-primary translatable">参与开发</a>
+        </div>
+
+        <div class="support-card">
+            <h3 class="translatable">编写相关文档</h3>
+            <p class="translatable">帮助我们编写用户指南、技术文档或宣传资料，让更多人了解和使用我们的平台。</p>
+            <a href="{{ url_for('doc_contribution') }}" class="btn btn-primary translatable">参与文档编写</a>
+        </div>
+
+        <div class="support-card">
+            <h3 class="translatable">审查组织经济</h3>
+            <p class="translatable">无论您是否有财务或审计背景，欢迎对我们组织具体的经济运作进行审查，确保组织财务的透明和公正。</p>
+            <a href="{{ url_for('financial_review') }}" class="btn btn-primary translatable">开始审查</a>
+        </div>
+
+        <div class="support-card">
+            <h3 class="translatable">提供重要信息</h3>
+            <p class="translatable">如果您有关于农业运营、劳动者权益或其他重要信息，欢迎与我们分享，帮助平台更好地发展。</p>
+            <a href="{{ url_for('submit_info') }}" class="btn btn-primary translatable">提交信息</a>
+        </div>
+    </div>
+{% endblock %}
