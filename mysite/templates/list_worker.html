@@ -3,5 +3,23 @@
 {% block title %}零抽成开发外包平台 - 平台介绍{% endblock %}
 
 {% block content %}
-    <p class="coming-soon translatable">全世界的程序员，联合起来！！！</p>
+<div class="main-content">
+    <h1>开发者列表</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>账号</th>
+                <th>用户名</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

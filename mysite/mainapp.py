@@ -114,7 +114,8 @@ def list_order():
 # 寻找开发者
 @app.route('/list_worker')
 def list_worker():
-    return render_template('list_worker.html')
+    users = User.query.all()
+    return render_template('list_worker.html', users=users)
 
 # 注册
 @app.route('/register', methods=['GET', 'POST'])
