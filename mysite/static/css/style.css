@@ -467,3 +467,13 @@ footer p {
 .organization-chart {
     margin-top: 20px;
 }
+/* Table spacing */
+table {
+    border-collapse: separate;
+    border-spacing: 10px; /* Adjust the value as needed */
+}
+
+td, th {
+    border: 1px solid #ddd; /* Example border, adjust as needed */
+    padding: 8px; /* Example padding, adjust as needed */
+}
