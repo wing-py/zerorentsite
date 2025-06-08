@@ -1,7 +1,36 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}零抽成开发外包平台 - 平台介绍{% endblock %}
+{% block title %}提交订单{% endblock %}
 
 {% block content %}
-    <p class="translatable">敬请期待</p>
+<div class="main-content">
+    <h2>提交新订单</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="category">类目:</label>
+            <input type="text" class="form-control" id="category" name="category" required>
+        </div>
+        <div class="form-group">
+            <label for="title">标题:</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">描述:</label>
+            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="price">佣金:</label>
+            <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="period">工期:</label>
+            <input type="text" class="form-control" id="period" name="period" required>
+        </div>
+        <div class="form-group">
+            <label for="contact">联系方式:</label>
+            <input type="text" class="form-control" id="contact" name="contact" required>
+        </div>
+        <button type="submit" class="btn btn-primary">提交订单</button>
+    </form>
+</div>
 {% endblock %}

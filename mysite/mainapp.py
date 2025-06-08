@@ -57,6 +57,7 @@ class Order(db.Model):
     description = db.Column(db.Text) # description 描述
     price = db.Column(db.Numeric(10, 2)) # price 佣金
     contact = db.Column(db.String(200)) # contact 联系
+    period = db.Column(db.String(100), nullable=True) # period 工期
     when_submitted = db.Column(db.DateTime, default=datetime.now) # when 发布时间
     submiter_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False) # who 发布用户
     submiter = db.relationship('User', backref='submitted_orders')
@@ -155,6 +156,7 @@ def submit_order():
         contact = request.form.get('contact')
 
         # Basic validation
+        print([category, title, description, price, contact])
         if not all([category, title, description, price, contact]):
             flash('所有字段都是必填项')
             return redirect(url_for('submit_order'))
@@ -172,6 +174,7 @@ def submit_order():
             description=description,
             price=price,
             contact=contact,
+            period=period,
             submiter_id=user_id
         )
 
@@ -287,9 +290,10 @@ def edit_order(order_id):
         order.description = request.form.get('description')
         order.price = request.form.get('price')
         order.contact = request.form.get('contact')
+        order.period = request.form.get('period')
 
         # Basic validation (similar to submit_order)
-        if not all([order.category, order.title, order.description, order.price, order.contact]):
+        if not all([order.category, order.title, order.description, order.price, order.contact, order.period]):
             flash('所有字段都是必填项')
             return redirect(url_for('edit_order', order_id=order.id))
 

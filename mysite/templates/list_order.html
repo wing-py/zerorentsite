@@ -40,6 +40,7 @@
                     <h6 class="card-subtitle mb-2 text-muted">{{ order.category }}</h6>
                     <p class="card-text">{{ order.description[:150] }}...</p> {# Display truncated description #}
                     <p class="card-text"><strong>佣金:</strong> {{ order.price }}</p>
+                    <p class="card-text"><strong>工期:</strong> {{ order.period }}</p>
                     <p class="card-text"><strong>发布人:</strong> {{ order.submiter.username }}</p> {# Access submiter's username #}
                     <p class="card-text"><strong>发布时间:</strong> {{ order.when_submitted.strftime('%Y-%m-%d %H:%M') }}</p> {# Format datetime #}
                     <a href="{{ url_for('view_order', order_id=order.id) }}" class="btn btn-info btn-sm">查看详情</a>

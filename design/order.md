@@ -4,10 +4,11 @@ website design docs for order thing
 
 # data_structure 数据结构
 ## user_submit_info 用户提交信息
-class 类目
+category 类目
 title 标题
 description 描述
 price 佣金
+period 工期
 contact 联系
 ## auto_submit_info 自动提交信息
 when(this order submit) 发布时间
