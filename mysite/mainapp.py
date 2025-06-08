@@ -153,11 +153,11 @@ def submit_order():
         title = request.form.get('title')
         description = request.form.get('description')
         price = request.form.get('price')
+        period = request.form.get('period')
         contact = request.form.get('contact')
 
         # Basic validation
-        print([category, title, description, price, contact])
-        if not all([category, title, description, price, contact]):
+        if not all([category, title, description, price, period, contact]):
             flash('所有字段都是必填项')
             return redirect(url_for('submit_order'))
 
@@ -173,8 +173,8 @@ def submit_order():
             title=title,
             description=description,
             price=price,
-            contact=contact,
             period=period,
+            contact=contact,
             submiter_id=user_id
         )
 
