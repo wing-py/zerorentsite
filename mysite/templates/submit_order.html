@@ -8,27 +8,27 @@
     <form method="POST">
         <div class="form-group">
             <label for="category">类目:</label>
-            <input type="text" class="form-control" id="category" name="category" required>
+            <input type="text" class="form-control" id="category" name="category" placeholder="例如：网站开发" required>
         </div>
         <div class="form-group">
             <label for="title">标题:</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            <input type="text" class="form-control" id="title" name="title" placeholder="例如：AI网站开发" required>
         </div>
         <div class="form-group">
             <label for="description">描述:</label>
-            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+            <textarea class="form-control" id="description" name="description" rows="5" placeholder="请详细描述您的需求，例如：需要一个基于Python的AI网站，具备用户注册、登录、内容发布等功能。" required></textarea>
         </div>
         <div class="form-group">
             <label for="price">佣金:</label>
-            <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+            <input type="number" class="form-control" id="price" name="price" step="0.01" placeholder="例如：800" required>
         </div>
         <div class="form-group">
             <label for="period">工期:</label>
-            <input type="text" class="form-control" id="period" name="period" required>
+            <input type="text" class="form-control" id="period" name="period" placeholder="例如：7天" required>
         </div>
         <div class="form-group">
             <label for="contact">联系方式:</label>
-            <input type="text" class="form-control" id="contact" name="contact" required>
+            <input type="text" class="form-control" id="contact" name="contact" placeholder="例如：微信、QQ、邮箱等" required>
         </div>
         <button type="submit" class="btn btn-primary">提交订单</button>
     </form>
