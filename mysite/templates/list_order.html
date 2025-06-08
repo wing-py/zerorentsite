@@ -1,7 +1,60 @@
 {% extends 'base.html' %}
 
-{% block title %}零抽成开发外包平台 - 平台介绍{% endblock %}
+{% block title %}订单列表{% endblock %}
 
 {% block content %}
-    <p class="translatable">敬请期待</p>
+<div class="main-content">
+    <h1>订单列表</h1>
+    <a href="{{ url_for('submit_order') }}" class="btn btn-primary mb-3">发布新订单</a>
+
+    {# Filter Form #}
+    <form action="{{ url_for('list_order') }}" method="get" class="form-inline mb-3">
+        <div class="form-group mr-2">
+            <label for="category_filter" class="mr-2">按类目筛选:</label>
+            <select class="form-control" id="category_filter" name="category">
+                <option value="">所有类目</option>
+                {% for category in categories %}
+                    <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group mr-2">
+            <label for="submiter_filter" class="mr-2">按发布人筛选:</label>
+            <select class="form-control" id="submiter_filter" name="submiter">
+                <option value="">所有发布人</option>
+                {% for submiter in submiters %}
+                    <option value="{{ submiter }}" {% if selected_submiter == submiter %}selected{% endif %}>{{ submiter }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">筛选</button>
+        <a href="{{ url_for('list_order') }}" class="btn btn-outline-secondary ml-2">清除筛选</a>
+    </form>
+
+
+    <div class="order-list">
+        {% for order in orders %}
+            <div class="card order-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ order.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ order.category }}</h6>
+                    <p class="card-text">{{ order.description[:150] }}...</p> {# Display truncated description #}
+                    <p class="card-text"><strong>佣金:</strong> {{ order.price }}</p>
+                    <p class="card-text"><strong>发布人:</strong> {{ order.submiter.username }}</p> {# Access submiter's username #}
+                    <p class="card-text"><strong>发布时间:</strong> {{ order.when_submitted.strftime('%Y-%m-%d %H:%M') }}</p> {# Format datetime #}
+                    <a href="{{ url_for('view_order', order_id=order.id) }}" class="btn btn-info btn-sm">查看详情</a>
+                    {% if session.get('user_id') == order.submiter_id %} {# Check if current user is the submiter #}
+                        <a href="{{ url_for('edit_order', order_id=order.id) }}" class="btn btn-warning btn-sm">修改</a>
+                        {# Use a form for delete button for safety #}
+                        <form action="{{ url_for('delete_order', order_id=order.id) }}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确定要删除此订单吗？');">删除</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p>暂无订单。</p>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}订单详情 - {{ order.title }}{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1>订单详情</h1>
+
+    <div class="order-details">
+        <h2>{{ order.title }}</h2>
+        <p><strong>类目:</strong> {{ order.category }}</p>
+        <p><strong>描述:</strong> {{ order.description }}</p>
+        <p><strong>佣金:</strong> {{ order.price }}</p>
+        <p><strong>联系方式:</strong> {{ order.contact }}</p>
+        <p><strong>发布人:</strong> {{ order.submiter.username }}</p>
+        <p><strong>发布时间:</strong> {{ order.when_submitted.strftime('%Y-%m-%d %H:%M') }}</p>
+
+        {# TODO: Add sections for comments and evaluations #}
+
+        <h3>评论区</h3>
+        {# TODO: Display existing comments and a form to add new comments #}
+        {% if order.comments %}
+            {% for comment in order.comments %}
+                <p><strong>{{ comment.who_comment.username }}:</strong> {{ comment.what_comment }} <em>({{ comment.comment_time.strftime('%Y-%m-%d %H:%M') }})</em></p>
+            {% endfor %}
+        {% else %}
+            <p>暂无评论。</p>
+        {% endif %}
+
+        <h4>添加评论</h4>
+        {# TODO: Add a form for submitting new comments #}
+        <form action="{{ url_for('add_comment', order_id=order.id) }}" method="post">
+            <div class="form-group">
+                <textarea name="comment_content" class="form-control" rows="3" placeholder="输入你的评论"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">提交评论</button>
+        </form>
+
+
+        <h3>评价信息</h3>
+        {# TODO: Display evaluation info and forms #}
+        {% if order.developer_evaluate_to_submiter or order.submiter_evaluate_to_developer %}
+            {% if order.developer_evaluate_to_submiter %}
+                <p><strong>承包方评价订单方:</strong> {{ order.developer_evaluate_to_submiter }}</p>
+            {% endif %}
+            {% if order.submiter_evaluate_to_developer %}
+                <p><strong>订单方评价承包方:</strong> {{ order.submiter_evaluate_to_developer }}</p>
+            {% endif %}
+        {% else %}
+            <p>暂无评价。</p>
+        {% endif %}
+
+        <h4>添加评价</h4>
+        {# TODO: Add forms for submitting evaluations #}
+        {# This will be more complex as it depends on the user's role (submiter or undertaker) #}
+        <p>评价功能待实现。</p>
+
+
+    </div>
+</div>
+{% endblock %}
