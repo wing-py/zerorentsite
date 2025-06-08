@@ -49,6 +49,44 @@ class Letter(db.Model):
     # 外键关联用户
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=True)
 
+# Order Model
+class Order(db.Model):
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4())) # id 订单号
+    category = db.Column(db.String(100)) # class 类目
+    title = db.Column(db.String(200)) # title 标题
+    description = db.Column(db.Text) # description 描述
+    price = db.Column(db.Numeric(10, 2)) # price 佣金
+    contact = db.Column(db.String(200)) # contact 联系
+    when_submitted = db.Column(db.DateTime, default=datetime.now) # when 发布时间
+    submiter_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False) # who 发布用户
+    submiter = db.relationship('User', backref='submitted_orders')
+
+    discuss_id = db.Column(db.Integer, nullable=True) # discuss_id 讨论号
+    contract = db.Column(db.Text, nullable=True) # contract 合同
+
+    # Many-to-Many relationship for undertakers
+    undertakers = db.relationship('User', secondary='order_undertakers', backref='undertaken_orders')
+
+    developer_evaluate_to_submiter = db.Column(db.Text, nullable=True) # developer_evaluate_to_submiter
+    submiter_evaluate_to_developer = db.Column(db.Text, nullable=True) # submiter_evaluate_to_developer
+
+# Association table for Many-to-Many relationship
+order_undertakers = db.Table('order_undertakers',
+    db.Column('order_id', db.String(36), db.ForeignKey('order.id'), primary_key=True),
+    db.Column('user_id', db.String(36), db.ForeignKey('user.id'), primary_key=True)
+)
+
+
+# Comment Model
+class Comment(db.Model):
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    order_id = db.Column(db.String(36), db.ForeignKey('order.id'), nullable=False) # Link to the Order
+    order = db.relationship('Order', backref='comments')
+    who_comment_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False) # who_comment 表达人
+    who_comment = db.relationship('User', backref='order_comments')
+    what_comment = db.Column(db.Text) # what_comment 意见陈述
+    comment_time = db.Column(db.DateTime, default=datetime.now) # When the comment was made
+
 # 首页
 @app.route('/')
 def index():
@@ -102,14 +140,172 @@ def forum_topic(topic_name):
 
 
 # 发布订单
-@app.route('/submit_order')
+@app.route('/submit_order', methods=['GET', 'POST'])
 def submit_order():
+    if request.method == 'POST':
+        # Handle form submission
+        if not session.get('user_id'):
+            flash('请先登录才能发布订单')
+            return redirect(url_for('login'))
+
+        category = request.form.get('category')
+        title = request.form.get('title')
+        description = request.form.get('description')
+        price = request.form.get('price')
+        contact = request.form.get('contact')
+
+        # Basic validation
+        if not all([category, title, description, price, contact]):
+            flash('所有字段都是必填项')
+            return redirect(url_for('submit_order'))
+
+        try:
+            price = float(price)
+        except ValueError:
+            flash('佣金必须是有效的数字')
+            return redirect(url_for('submit_order'))
+
+        user_id = session['user_id']
+        new_order = Order(
+            category=category,
+            title=title,
+            description=description,
+            price=price,
+            contact=contact,
+            submiter_id=user_id
+        )
+
+        db.session.add(new_order)
+        db.session.commit()
+
+        flash('订单发布成功！')
+        return redirect(url_for('list_order')) # Redirect to the order list page
+
+    # For GET request, render the form
     return render_template('submit_order.html')
 
 # 浏览订单
 @app.route('/list_order')
 def list_order():
-    return render_template('list_order.html')
+    category_filter = request.args.get('category')
+    submiter_filter = request.args.get('submiter')
+
+    orders = Order.query
+
+    if category_filter:
+        orders = orders.filter_by(category=category_filter)
+
+    if submiter_filter:
+        # Assuming submiter_filter is the username
+        submiter_user = User.query.filter_by(username=submiter_filter).first()
+        if submiter_user:
+            orders = orders.filter_by(submiter=submiter_user)
+        else:
+            flash(f'未找到用户: {submiter_filter}')
+
+
+    orders = orders.all() # Execute the query
+
+    # Get unique categories and submitters for filters
+    categories = [order.category for order in Order.query.distinct(Order.category)]
+    submiters = [order.submiter.username for order in Order.query.distinct(Order.submiter_id)]
+
+
+    return render_template('list_order.html', orders=orders, selected_category=category_filter, selected_submiter=submiter_filter, categories=categories, submiters=submiters) # Pass filters and options to template
+
+# 查看订单详情
+@app.route('/order/<order_id>')
+def view_order(order_id):
+    order = Order.query.get_or_404(order_id) # Fetch the order or return 404
+    return render_template('order_detail.html', order=order) # Render the detail template
+
+# 添加评论
+@app.route('/order/<order_id>/comment', methods=['POST'])
+def add_comment(order_id):
+    if not session.get('user_id'):
+        flash('请先登录才能评论')
+        return redirect(url_for('login'))
+
+    order = Order.query.get_or_404(order_id)
+    comment_content = request.form.get('comment_content')
+
+    if not comment_content:
+        flash('评论内容不能为空')
+        return redirect(url_for('view_order', order_id=order.id))
+
+    user_id = session['user_id']
+    new_comment = Comment(
+        order_id=order.id,
+        who_comment_id=user_id,
+        what_comment=comment_content
+    )
+
+    db.session.add(new_comment)
+    db.session.commit()
+
+    flash('评论添加成功！')
+    return redirect(url_for('view_order', order_id=order.id))
+
+# 删除订单
+@app.route('/order/<order_id>/delete', methods=['POST'])
+def delete_order(order_id):
+    if not session.get('user_id'):
+        flash('请先登录才能删除订单')
+        return redirect(url_for('login'))
+
+    order = Order.query.get_or_404(order_id)
+
+    # Check if the current user is the submiter
+    if session['user_id'] != order.submiter_id:
+        flash('您无权删除此订单')
+        return redirect(url_for('view_order', order_id=order.id))
+
+    db.session.delete(order)
+    db.session.commit()
+
+    flash('订单删除成功！')
+    return redirect(url_for('list_order'))
+
+# 修改订单
+@app.route('/order/<order_id>/edit', methods=['GET', 'POST'])
+def edit_order(order_id):
+    if not session.get('user_id'):
+        flash('请先登录才能修改订单')
+        return redirect(url_for('login'))
+
+    order = Order.query.get_or_404(order_id)
+
+    # Check if the current user is the submiter
+    if session['user_id'] != order.submiter_id:
+        flash('您无权修改此订单')
+        return redirect(url_for('view_order', order_id=order.id))
+
+    if request.method == 'POST':
+        # Handle form submission for editing
+        order.category = request.form.get('category')
+        order.title = request.form.get('title')
+        order.description = request.form.get('description')
+        order.price = request.form.get('price')
+        order.contact = request.form.get('contact')
+
+        # Basic validation (similar to submit_order)
+        if not all([order.category, order.title, order.description, order.price, order.contact]):
+            flash('所有字段都是必填项')
+            return redirect(url_for('edit_order', order_id=order.id))
+
+        try:
+            order.price = float(order.price)
+        except ValueError:
+            flash('佣金必须是有效的数字')
+            return redirect(url_for('edit_order', order_id=order.id))
+
+        db.session.commit()
+
+        flash('订单修改成功！')
+        return redirect(url_for('view_order', order_id=order.id)) # Redirect to the order detail page
+
+    # For GET request, render the edit form
+    return render_template('edit_order.html', order=order)
 
 # 寻找开发者
 @app.route('/list_worker')
