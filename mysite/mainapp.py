@@ -354,6 +354,19 @@ def register():
 
     return render_template('register.html')
 
+# 检查用户名是否已存在
+@app.route('/check_username', methods=['POST'])
+def check_username():
+    data = request.get_json()
+    username = data.get('username')
+
+    if not username:
+        return jsonify({'error': '缺少用户名'}), 400
+
+    user = User.query.filter_by(username=username).first()
+
+    return jsonify({'available': user is None})
+
 # 登录
 @app.route('/login', methods=['GET', 'POST'])
 def login():

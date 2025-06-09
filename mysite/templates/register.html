@@ -9,31 +9,36 @@
     <form action="{{ url_for('register') }}" method="post">
         <div class="form-group">
             <label for="username" class="translatable">用户名</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" required placeholder="用于登录的用户名">
+            <div class="message" id="usernameCheckMessage"></div> {# Message area for username check #}
         </div>
         
         <div class="form-group">
             <label for="password" class="translatable">密码</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" required placeholder="登录密码，请妥善保存">
         </div>
 
         <div class="form-group">
             <label for="confirm_password" class="translatable">确认密码</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
+            <input type="password" id="confirm_password" name="confirm_password" required placeholder="请再次输入密码以确认">
         </div>
-
+        <div>
+            <div class="message purple" id="prepareMessage">等待输入密码</div>
+            <div class="message red" id="errorMessage">密码和确认密码不匹配</div>
+            <div class="message green" id="okMessage">密码和确认密码已匹配</div>
+        </div>
         <div class="form-group">
             <label for="email" class="translatable">邮箱 (可选)</label>
-            <input type="email" id="email" name="email">
+            <input type="email" id="email" name="email" placeholder="请输入邮箱">
         </div>
         
         <div class="form-group">
             <label for="phone" class="translatable">手机号码 (可选)</label>
-            <input type="tel" id="phone" name="phone">
+            <input type="tel" id="phone" name="phone" placeholder="请输入手机号码">
         </div>
         
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary translatable">注册</button>
+            <button type="submit" class="btn btn-primary translatable" id="registerButton" disabled>注册</button>
             <a href="{{ url_for('login') }}" class="btn btn-secondary translatable">已有账号？去登录</a>
         </div>
     </form>
@@ -43,4 +48,145 @@
         <p class="translatable">微信登录、QQ登录、手机验证码登录、邮箱绑定待开发</p>
     </div>
 </div>
+<style>
+    div.message {
+        margin-top: 5px;
+        font-size: 0.9rem;
+        display: none;
+    }
+    .purple {
+        color:purple;
+    }
+    .red {
+        color:red;
+    }
+    .green {
+        color:green;
+    }
+</style>
+<script>
+    const usernameField = document.getElementById('username');
+    const passwordField = document.getElementById('password');
+    const confirmPasswordField = document.getElementById('confirm_password');
+    const registerButton = document.getElementById('registerButton');
+    const form = document.querySelector('form'); // 获取表单元素
+
+    // 显示密码消息的元素
+    let errorMessage = document.getElementById('errorMessage');
+    let prepareMessage = document.getElementById('prepareMessage');
+    let okMessage = document.getElementById('okMessage');
+
+    // 将消息元素添加到确认密码字段下方
+    confirmPasswordField.parentNode.insertBefore(errorMessage, confirmPasswordField.nextSibling);
+    confirmPasswordField.parentNode.insertBefore(okMessage, confirmPasswordField.nextSibling);
+    confirmPasswordField.parentNode.insertBefore(prepareMessage, confirmPasswordField.nextSibling); // 插入准备消息
+
+    const usernameCheckMessage = document.getElementById('usernameCheckMessage');
+
+    let isUsernameAvailable = false; // Track username availability
+
+    async function checkUsernameAvailability() {
+        const username = usernameField.value.trim();
+        if (username === '') {
+            usernameCheckMessage.className = 'message red';
+            usernameCheckMessage.textContent = '请输入用户名';
+            usernameCheckMessage.style.display = 'block';
+            isUsernameAvailable = false;
+            updateButtonState(); // Update button state after check
+            return;
+        }
+
+        // 清除之前的消息
+        usernameCheckMessage.style.display = 'none';
+        usernameCheckMessage.textContent = '';
+        isUsernameAvailable = false; // Assume not available until confirmed
+        updateButtonState(); // Update button state while checking
+
+        try {
+            const response = await fetch('{{ url_for("check_username") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: username }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                if (data.available) {
+                    usernameCheckMessage.className = 'message green';
+                    usernameCheckMessage.textContent = '用户名可用';
+                    isUsernameAvailable = true;
+                } else {
+                    usernameCheckMessage.className = 'message red';
+                    usernameCheckMessage.textContent = '用户名已被注册';
+                    isUsernameAvailable = false;
+                }
+            } else {
+                usernameCheckMessage.className = 'message red';
+                usernameCheckMessage.textContent = data.error || '检查用户名时发生错误';
+                isUsernameAvailable = false;
+            }
+        } catch (error) {
+            console.error('Error checking username:', error);
+            usernameCheckMessage.className = 'message red';
+            usernameCheckMessage.textContent = '检查用户名时发生网络错误';
+            isUsernameAvailable = false;
+        } finally {
+            usernameCheckMessage.style.display = 'block';
+            updateButtonState(); // Update button state after check
+        }
+    }
+
+    function updateButtonState() {
+        const passwordsMatch = passwordField.value === confirmPasswordField.value;
+        const usernameFilled = usernameField.value.trim() !== '';
+        const passwordFilled = passwordField.value.trim() !== '';
+
+        // Button is enabled only if username is filled AND available, AND passwords match AND password is not empty
+        const canRegister = usernameFilled && isUsernameAvailable && passwordsMatch && passwordFilled;
+
+        if (!passwordFilled) {
+            prepareMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            okMessage.style.display = 'none';
+        } else if (!passwordsMatch) {
+            prepareMessage.style.display = 'none';
+            errorMessage.style.display = 'block';
+            okMessage.style.display = 'none';
+        } else { // Passwords match
+            prepareMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            okMessage.style.display = 'block';
+        }
+
+        registerButton.disabled = !canRegister;
+
+        if (canRegister) {
+            form.removeEventListener('submit', preventSubmit);
+        } else {
+            form.addEventListener('submit', preventSubmit);
+        }
+    }
+
+    function preventSubmit(event) {
+        event.preventDefault();
+    }
+
+    // 监听输入事件
+    usernameField.addEventListener('input', () => {
+        // Delay check slightly to avoid too many requests while typing
+        setTimeout(checkUsernameAvailability, 500);
+        updateButtonState(); // Update button state immediately based on filled status
+    });
+    usernameField.addEventListener('blur', checkUsernameAvailability); // Check on blur as well
+
+    passwordField.addEventListener('input', updateButtonState);
+    confirmPasswordField.addEventListener('input', updateButtonState);
+
+    // 初始检查（例如，如果用户使用浏览器自动填充）
+    updateButtonState();
+
+</script>
 {% endblock %}
