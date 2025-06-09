@@ -3,77 +3,148 @@
 {% block title %}零抽成 - 首页{% endblock %}
 
 {% block content %}
-    <div class="hero">
-        <h2 class="translatable">欢迎来到零抽成外包平台</h2>
-        <p class="translatable">这里是零抽成开发外包平台的公开网站</p>
+<div class="hero">
+    <h2 class="translatable">欢迎来到零抽成外包平台</h2>
+    <p class="translatable">这里是零抽成开发外包平台的公开网站</p>
+</div>
+
+<div class="main-content">
+<div class="pre-header">
+    <span class="toggle-btn" onclick="toggleContent(this)">展开</span>
+    <span class="copy-btn" onclick="copyContent(this)">复制</span>
+</div>
+<pre class="pre-content">
+# 平台介绍
+我们在做一个<b>零抽成</b>的开发外包平台，
+同时也是一个共享共建的平台。
+欢迎大家参与或加入，
+欢迎各种建议或意见，
+欢迎邀请其他可能感兴趣的人参与。
+目前平台相关设施正在建设，
+平台围绕零抽成为根本原则，
+具体的运营机制还在民主讨论。
+
+# 联系方式
+[QQ群号](1045606335)
+微信相关联系人(用于推到微信群):
+[Ooooomega7876]，[wingpython]
+
+# 相关链接
+[<a href="https://zerorent.pythonanywhere.com/">平台官网</a>](https://zerorent.pythonanywhere.com/)
+[<a href="https://github.com/wing-py/zerorentsite">源码仓库</a>](https://github.com/wing-py/zerorentsite)
+[<a href="https://b23.tv/Jluddzg">宣传视频</a>](https://b23.tv/Jluddzg)
+[<a href="https://shop360976992.taobao.com">淘宝店铺</a>](https://shop360976992.taobao.com)
+[<a href="https://item.taobao.com/item.htm?id=924307846345">淘宝商品</a>](https://item.taobao.com/item.htm?id=924307846345)
+
+# 官网介绍
+[<a href="https://zerorent.pythonanywhere.com/list_order">订单列表</a>]
+(https://zerorent.pythonanywhere.com/list_order)
+[<a href="https://zerorent.pythonanywhere.com/submit_order">发布订单</a>]
+(https://zerorent.pythonanywhere.com/submit_order)
+[<a href="https://zerorent.pythonanywhere.com/list_worker">开发者表</a>]
+(https://zerorent.pythonanywhere.com/list_worker)
+[<a href="https://zerorent.pythonanywhere.com/register">注册账户</a>]
+(https://zerorent.pythonanywhere.com/register)
+[<a href="https://zerorent.pythonanywhere.com/forum">意见论坛</a>]
+(https://zerorent.pythonanywhere.com/forum)
+[<a href="https://zerorent.pythonanywhere.com/about">平台介绍</a>]
+(https://zerorent.pythonanywhere.com/about)
+[<a href="https://zerorent.pythonanywhere.com/progress">进展汇报</a>]
+(https://zerorent.pythonanywhere.com/progress)
+</pre>
+</div>
+
+<div class="features">
+    <a href="{{ url_for('submit_order') }}">
+        <div class="feature">
+            <h3 class="translatable">发布订单</h3>
+            <p class="translatable">发布需求订单</p>
+        </div>
+    </a>
+
+    <a href="{{ url_for('list_order') }}">
+        <div class="feature">
+            <h3 class="translatable">浏览订单</h3>
+            <p class="translatable">寻找、筛选和操作订单</p>
+        </div>
+    </a>
+
+    <a href="{{ url_for('forum') }}">
+    <div class="feature">
+        <h3 class="translatable">意见论坛</h3>
+        <p class="translatable">浏览和参与平台相关讨论</p>
     </div>
+    </a>
 
-    <div class="features">
-        <a href="{{ url_for('about') }}">
-            <div class="feature">
-                <h3 class="translatable">平台介绍</h3>
-                <p class="translatable">介绍零抽成外包平台的目标、运行机制和运营战略</p>
-            </div>
-        </a>
-
-        <a href="{{ url_for('forum') }}">
-            <div class="feature">
-                <h3 class="translatable">意见论坛</h3>
-                <p class="translatable">收集和公开讨论对平台的各种建议意见</p>
-            </div>
-        </a>
-
-        <div class="feature">
-            <h3 class="translatable">发展规划</h3>
-            <p class="translatable">目前关于组织以及相关程序设施建设的待办事项</p>
-        </div>
-
-        <a href="{{ url_for('support') }}">
-        <div class="feature">
-            <h3 class="translatable">提供支持</h3>
-            <p class="translatable">您可以为组织以及其建设提供支持</p>
-        </div>
-        </a>
-
-        <div class="feature">
-            <h3 class="translatable">相关文档</h3>
-            <p class="translatable">相关的文档资料</p>
-        </div>
-
-
-        <div class="feature">
-            <h3 class="translatable">AI服务</h3>
-            <p class="translatable">我们使用AI进行信息服务,并尝试使用AI管理组织!</p>
-        </div>
-
-        {% if session.user_id %}
-        <a href="{{ url_for('profile') }}">
-        <div class="feature">
-            <h3 class="translatable">账号管理</h3>
-            <p class="translatable">填写账号个人信息，方便整理归档和进一步沟通</p>
-        </div>
-        </a>
-        {% endif %}
-
-        <a href="{{ url_for('compose') }}">
-        <div class="feature">
-            <h3 class="translatable">撰写信件</h3>
-            <p class="translatable">收集人们的意见、看法和诉求</p>
-        </div>
-        </a>
-
-        <a href="{{ url_for('mailbox') }}">
-        <div class="feature">
-            <h3 class="translatable">信件阅览</h3>
-            <p class="translatable">浏览其他人的信件，了解大家的想法和建议</p>
-        </div>
-        </a>
-
-        <a href="{{ url_for('disclosure') }}">
-            <div class="feature">
-                <h3 class="translatable">信息公示</h3>
-                <p class="translatable">对资产、人员和组织制度的信息透明公示</p>
-            </div>
-        </a>
+    <a href="{{ url_for('progress') }}">
+    <div class="feature">
+        <h3 class="translatable">进度汇报</h3>
+        <p class="translatable">平台发展的报告文书</p>
     </div>
+    </a>
+
+    {% if session.user_id %}
+    <a href="{{ url_for('profile') }}">
+    <div class="feature">
+        <h3 class="translatable">账号管理</h3>
+        <p class="translatable">账号个人信息填写和修改</p>
+    </div>
+    </a>
+    {% endif %}
+</div>
+
+<style>
+/* 首页样式 */
+.hero {
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero h2 {
+    font-size: 24px; /* Reduced font-size */
+    margin-bottom: 10px;
+    color: #00FFFF;
+}
+
+.hero p {
+    font-size: 16px; /* Reduced font-size */
+    color: #5f6368;
+    margin-bottom: 20px;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Fewer columns */
+    gap: 20px; /* Adjusted gap */
+    margin-top: 20px;
+}
+
+.feature {
+    background-color: white;
+    padding: 15px; /* Reduced padding */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Adjusted box shadow */
+    text-align: center;
+    transition: transform 0.2s ease-in-out; /* Added transition for hover effect */
+}
+
+.feature:hover {
+    transform: translateY(-5px); /* Added hover effect */
+}
+
+.feature h3 {
+    margin-bottom: 10px;
+    color: #202124;
+    font-size: 18px; /* Reduced font-size */
+}
+
+.feature p {
+    color: #5f6368;
+    font-size: 14px; /* Reduced font-size */
+}
+</style>
 {% endblock %}

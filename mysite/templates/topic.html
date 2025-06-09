@@ -18,38 +18,6 @@
             border-radius: 5px;
         }
         
-        .comment-header {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        
-        .comment-content {
-            font-family: monospace;
-            white-space: pre-wrap; /* 保留换行符 */
-            margin-left: 10px;
-            line-height: 1.5;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            max-height: 500px; /* 初始高度限制 */
-            overflow: hidden; /* 超出部分隐藏 */
-            position: relative;
-            overflow-y: auto; /* 超出部分显示滚动条 */
-        }
-
-        .toggle-btn {
-            margin-left: 10px;
-            font-size: 0.8em;
-            color: #666;
-            cursor: pointer;
-        }
-
-        .expanded {
-            max-height: none;
-        }
-        
         .comment-form {
             margin-top: 20px;
             padding: 15px;
@@ -69,12 +37,13 @@
     <div class="comment-list">
         {% for comment in comments %}
         <div class="comment">
-            <div class="comment-header">
+            <div class="pre-header">
                 {{ comment.username }}
                 <span class="toggle-btn" onclick="toggleContent(this)">展开</span>
+                <span class="copy-btn" onclick="copyContent(this)">复制</span>
             </div>
             
-            <pre class="comment-content">{{ comment.content }}</pre>
+            <pre class="pre-content">{{ comment.content }}</pre>
         </div>
         {% endfor %}
     </div>
@@ -88,17 +57,5 @@
     </div>
 
 
-    <script>
-    function toggleContent(btn) {
-            const content = btn.parentElement.parentElement.children[1];
-            if (content.classList.contains('expanded')) {
-                content.classList.remove('expanded');
-                btn.textContent = '展开';
-            } else {
-                content.classList.add('expanded');
-                btn.textContent = '折叠';
-            }
-        }
-    </script>
 {% endblock %}
 
