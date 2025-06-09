@@ -125,6 +125,46 @@ li {
     color: #4285f4; /* Blue color */
 }
 
+/* text pre box */
+.pre-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.pre-content {
+    font-family: monospace;
+    white-space: pre-wrap; /* 保留换行符 */
+    margin-left: 10px;
+    line-height: 1.5;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    max-height: 500px; /* 初始高度限制 */
+    overflow: hidden; /* 超出部分隐藏 */
+    position: relative;
+    overflow-y: auto; /* 超出部分显示滚动条 */
+}
+
+.toggle-btn {
+    margin-left: 10px;
+    font-size: 0.8em;
+    color: #666;
+    cursor: pointer;
+}
+
+.copy-btn {
+    margin-left: 10px;
+    font-size: 0.8em;
+    color: #666;
+    cursor: pointer;
+}
+
+.expanded {
+    max-height: none;
+}
+
 /* Translated text style */
 .translated-text {
     font-size: 0.9em;
@@ -246,124 +286,6 @@ nav ul li a:hover {
 /* 主要内容区域 */
 main {
     padding: 40px 0;
-}
-
-/* 首页样式 */
-.hero {
-    text-align: center;
-    margin-bottom: 80px; /* Increased margin-bottom */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 300px; /* Ensure some height for vertical centering */
-}
-
-.hero h2 {
-    font-size: 24px; /* Reduced font-size */
-    margin-bottom: 10px;
-    color: #202124;
-}
-
-.hero p {
-    font-size: 16px; /* Reduced font-size */
-    color: #5f6368;
-    margin-bottom: 20px;
-}
-
-.hero h2.translatable {
-    color: #00FFFF; /* Cyan color */
-}
-
-.features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Fewer columns */
-    gap: 20px; /* Adjusted gap */
-    margin-top: 120px; /* Increased margin-top */
-}
-
-.feature {
-    background-color: white;
-    padding: 15px; /* Reduced padding */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Adjusted box shadow */
-    text-align: center;
-    transition: transform 0.2s ease-in-out; /* Added transition for hover effect */
-}
-
-.feature:hover {
-    transform: translateY(-5px); /* Added hover effect */
-}
-
-.feature h3 {
-    margin-bottom: 10px;
-    color: #202124;
-    font-size: 18px; /* Reduced font-size */
-}
-
-.feature p {
-    color: #5f6368;
-    font-size: 14px; /* Reduced font-size */
-}
-
-/* 信箱列表 */
-.letters-list {
-    margin-top: 30px;
-}
-
-.letter-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    padding: 20px;
-}
-
-.letter-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 15px;
-}
-
-.letter-header h3 {
-    font-size: 18px;
-    margin: 0;
-}
-
-.letter-header h3 a {
-    color: #202124;
-    text-decoration: none;
-}
-
-.letter-header h3 a:hover {
-    color: #4285f4;
-}
-
-.category {
-    background-color: #e8eaed;
-    color: #5f6368;
-    padding: 4px 8px;
-    border-radius: 16px;
-    font-size: 12px;
-}
-
-.letter-content p {
-    color: #5f6368;
-    margin-bottom: 15px;
-    word-break: break-all;
-}
-
-.letter-meta {
-    display: flex;
-    justify-content: space-between;
-    color: #9aa0a6;
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
-.letter-actions {
-    display: flex;
-    gap: 10px;
 }
 
 /* 页脚 */

@@ -119,3 +119,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 100);
 });
+
+/* pre box */
+// pre box toggle-btn
+function toggleContent(btn) {
+    const content = btn.parentElement.parentElement.children[1];
+    if (content.classList.contains('expanded')) {
+        content.classList.remove('expanded');
+        btn.textContent = '展开';
+    } else {
+        content.classList.add('expanded');
+        btn.textContent = '折叠';
+    }
+}
+// pre box copy-btn
+function copyContent(btn) {
+    const content = btn.parentElement.parentElement.children[1]; // 获取 pre 标签
+    const textToCopy = content.textContent; // 获取文本内容
+
+    navigator.clipboard.writeText(textToCopy).then(function() {
+        // 复制成功
+        btn.textContent = '已复制!';
+        setTimeout(() => {
+            btn.textContent = '复制'; // 恢复按钮文本
+        }, 2000); // 2秒后恢复
+    }, function(err) {
+        // 复制失败
+        console.error('复制失败: ', err);
+        btn.textContent = '复制失败!';
+            setTimeout(() => {
+            btn.textContent = '复制'; // 恢复按钮文本
+        }, 2000); // 2秒后恢复
+    });
+}
