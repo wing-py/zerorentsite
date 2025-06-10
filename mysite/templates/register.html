@@ -6,7 +6,7 @@
 <div class="main-content">
     <h2 class="translatable">用户注册</h2>
     
-    <form action="{{ url_for('register') }}" method="post">
+    <form action="{{ url_for('auth.register') }}" method="post">
         <div class="form-group">
             <label for="username" class="translatable">用户名</label>
             <input type="text" id="username" name="username" required placeholder="用于登录的用户名">
@@ -39,7 +39,7 @@
         
         <div class="form-actions">
             <button type="submit" class="btn btn-primary translatable" id="registerButton" disabled>注册</button>
-            <a href="{{ url_for('login') }}" class="btn btn-secondary translatable">已有账号？去登录</a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary translatable">已有账号？去登录</a>
         </div>
     </form>
 
@@ -103,7 +103,7 @@
         updateButtonState(); // Update button state while checking
 
         try {
-            const response = await fetch('{{ url_for("check_username") }}', {
+            const response = await fetch("{{ url_for('auth.check_username') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -7,7 +7,7 @@
     <h2 class="translatable">用户登录</h2>
     
     <!-- 账号密码登录 -->
-    <form action="{{ url_for('login') }}" method="post">
+    <form action="{{ url_for('auth.login') }}" method="post">
         <div class="form-group">
             <label for="username" class="translatable">用户名</label>
             <input type="text" id="username" name="username" required>
@@ -20,7 +20,7 @@
         
         <div class="form-actions">
             <button type="submit" class="btn btn-primary translatable">登录</button>
-            <a href="{{ url_for('register') }}" class="btn btn-secondary translatable">还没有账号？去注册</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-secondary translatable">还没有账号？去注册</a>
         </div>
     </form>
 

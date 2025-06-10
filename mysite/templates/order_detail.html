@@ -30,7 +30,7 @@
 
         <h4>添加评论</h4>
         {# TODO: Add a form for submitting new comments #}
-        <form action="{{ url_for('add_comment', order_id=order.id) }}" method="post">
+        <form action="{{ url_for('order.add_comment', order_id=order.id) }}" method="post">
             <div class="form-group">
                 <textarea name="comment_content" class="form-control" rows="3" placeholder="输入你的评论"></textarea>
             </div>
