@@ -13,16 +13,16 @@
         <div class="container">
             <nav>
                 <ul>
-                    <li><a href="{{ url_for('index') }}" class="translatable">首页</a></li>
-                    <li><a href="{{ url_for('submit_order') }}" class="translatable">发布订单</a></li>
-                    <li><a href="{{ url_for('list_order') }}" class="translatable">浏览订单</a></li>
-                    <li><a href="{{ url_for('list_worker') }}" class="translatable">寻找开发者</a></li>
+                    <li><a href="{{ url_for('main.index') }}" class="translatable">首页</a></li>
+                    <li><a href="{{ url_for('order.submit_order') }}" class="translatable">发布订单</a></li>
+                    <li><a href="{{ url_for('order.list_order') }}" class="translatable">浏览订单</a></li>
+                    <li><a href="{{ url_for('user.list_worker') }}" class="translatable">寻找开发者</a></li>
                     {% if session.user_id %}
-                        <li><a href="{{ url_for('profile') }}" class="translatable">个人信息</a></li>
-                        <li><a href="{{ url_for('logout') }}" class="translatable">注销({{ session.username }})</a></li>
+                        <li><a href="{{ url_for('auth.profile') }}" class="translatable">个人信息</a></li>
+                        <li><a href="{{ url_for('auth.logout') }}" class="translatable">注销({{ session.username }})</a></li>
                     {% else %}
-                        <li><a href="{{ url_for('login') }}" class="header-button"><span class="translatable">登录</span></a></li>
-                        <li><a href="{{ url_for('register') }}" class="header-button"><span class="translatable">注册</span></a></li>
+                        <li><a href="{{ url_for('auth.login') }}" class="header-button"><span class="translatable">登录</span></a></li>
+                        <li><a href="{{ url_for('auth.register') }}" class="header-button"><span class="translatable">注册</span></a></li>
                     {% endif %}
                     <li>
                         <select id="language-selector">

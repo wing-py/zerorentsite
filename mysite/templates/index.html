@@ -55,28 +55,28 @@
 </div>
 
 <div class="features">
-    <a href="{{ url_for('submit_order') }}">
+    <a href="{{ url_for('order.submit_order') }}">
         <div class="feature">
             <h3 class="translatable">发布订单</h3>
             <p class="translatable">发布需求订单</p>
         </div>
     </a>
 
-    <a href="{{ url_for('list_order') }}">
+    <a href="{{ url_for('order.list_order') }}">
         <div class="feature">
             <h3 class="translatable">浏览订单</h3>
             <p class="translatable">寻找、筛选和操作订单</p>
         </div>
     </a>
 
-    <a href="{{ url_for('forum') }}">
+    <a href="{{ url_for('forum.forum') }}">
     <div class="feature">
         <h3 class="translatable">意见论坛</h3>
         <p class="translatable">浏览和参与平台相关讨论</p>
     </div>
     </a>
 
-    <a href="{{ url_for('progress') }}">
+    <a href="{{ url_for('main.progress') }}">
     <div class="feature">
         <h3 class="translatable">进度汇报</h3>
         <p class="translatable">平台发展的报告文书</p>
@@ -84,7 +84,7 @@
     </a>
 
     {% if session.user_id %}
-    <a href="{{ url_for('profile') }}">
+    <a href="{{ url_for('auth.profile') }}">
     <div class="feature">
         <h3 class="translatable">账号管理</h3>
         <p class="translatable">账号个人信息填写和修改</p>

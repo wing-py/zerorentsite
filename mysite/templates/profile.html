@@ -6,7 +6,7 @@
 <div class="main-content">
     <h2 class="translatable">账号信息</h2>
     
-    <form action="{{ url_for('profile') }}" method="post">
+    <form action="{{ url_for('auth.profile') }}" method="post">
 
         <div class="form-group">
             <label for="username" class="translatable">账号名</label>
@@ -45,8 +45,7 @@
         
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">保存信息</button>
-            <a href="{{ url_for('mailbox') }}" class="btn btn-secondary translatable">返回信箱</a>
-            <a href="{{ url_for('change_password') }}" class="btn btn-secondary translatable">更改密码</a>
+            <a href="{{ url_for('auth.change_password') }}" class="btn btn-secondary translatable">更改密码</a>
         </div>
     </form>
 </div>
