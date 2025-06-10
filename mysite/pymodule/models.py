@@ -14,6 +14,15 @@ class User(db.Model):
     phone = db.Column(db.String(20))
     created_at = db.Column(db.DateTime, default=datetime.now)
 
+    # 身份标记字段
+    is_devlop = db.Column(db.Boolean, default=False)
+    is_custom = db.Column(db.Boolean, default=False)
+
+    # 开发者信息字段
+    dev_skills = db.Column(db.JSON, nullable=True) # 存储技能列表，使用JSON格式
+    description = db.Column(db.Text, nullable=True) # 描述
+    note = db.Column(db.Text, nullable=True) # 备注
+
     # 个人信息字段
     real_name = db.Column(db.String(50))
     id_card = db.Column(db.String(18))

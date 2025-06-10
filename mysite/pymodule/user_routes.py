@@ -8,3 +8,84 @@ user_bp = Blueprint('user', __name__)
 def list_worker():
     users = User.query.all()
     return render_template('list_worker.html', users=users)
+
+@user_bp.route('/toggle_identity', methods=['POST'])
+def toggle_identity():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'message': '用户未登录'}), 401
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'success': False, 'message': '用户不存在'}), 404
+
+    data = request.get_json()
+    identity_type = data.get('identity_type')
+    state = data.get('state')
+
+    if identity_type == 'developer':
+        user.is_devlop = state
+    elif identity_type == 'customer':
+        user.is_custom = state
+    else:
+        return jsonify({'success': False, 'message': '无效的身份类型'}), 400
+
+    try:
+        db.session.commit()
+        return jsonify({
+            'success': True, 
+            'message': '身份标记更新成功', 
+            'identify_type': identity_type,
+            'state':state
+                        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'更新失败: {str(e)}'}), 500
+
+@user_bp.route('/edit_developer_profile', methods=['POST'])
+def edit_developer_profile():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('请先登录才能编辑开发者简历', 'warning')
+        return redirect(url_for('auth.login'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash('用户不存在', 'danger')
+        return redirect(url_for('main.index')) # 或者重定向到其他合适的页面
+
+    # 获取表单数据
+    dev_skills_str = request.form.get('dev_skills')
+    description = request.form.get('description')
+    note = request.form.get('note')
+
+    # 将技能字符串转换为列表（如果需要的话，这里简单处理为字符串）
+    # TODO: 更复杂的技能处理，例如JSON格式
+    user.dev_skills = dev_skills_str # 暂时存储为字符串，后续可以改为JSON
+    user.description = description
+    user.note = note
+
+    try:
+        db.session.commit()
+        flash('开发者简历更新成功', 'success')
+        return redirect(url_for('auth.profile'))
+    except Exception as e:
+        db.session.rollback()
+        flash(f'更新开发者简历失败: {str(e)}', 'danger')
+        return redirect(url_for('auth.profile'))
+
+@user_bp.route('/profile/<string:user_id>')
+def profile(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        flash('用户不存在', 'danger')
+        return redirect(url_for('main.index'))
+
+    # Dynamically create a dictionary from user object columns
+    user_data = {}
+    for column in user.__table__.columns:
+        # Exclude sensitive fields like password
+        if column.name != 'password':
+             user_data[column.name] = getattr(user, column.name)
+
+    return render_template('profile.html', user=user_data) # Pass the dictionary

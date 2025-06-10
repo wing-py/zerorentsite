@@ -90,8 +90,15 @@ def profile():
 
         flash('个人信息已更新')
         return redirect(url_for('auth.profile'))
+    
+    # Dynamically create a dictionary from user object columns
+    user_data = {}
+    for column in user.__table__.columns:
+        # Exclude sensitive fields like password
+        if column.name != 'password':
+             user_data[column.name] = getattr(user, column.name)
 
-    return render_template('profile.html', user=user)
+    return render_template('profile.html', user=user, user_data=user_data)
 
 # 更改密码页面
 @auth_bp.route('/change_password', methods=['GET', 'POST'])

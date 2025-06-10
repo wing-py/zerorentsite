@@ -1,14 +1,5 @@
 /* 基础样式重置 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
     background-color: #f8f9fa; /* Lighter gray background */
 }
 
@@ -215,9 +206,7 @@ li {
 }
 
 .form-group label {
-    display: block;
     margin-bottom: 8px;
-    font-weight: 500;
 }
 
 .form-group input,

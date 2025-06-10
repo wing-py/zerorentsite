@@ -5,48 +5,224 @@
 {% block content %}
 <div class="main-content">
     <h2 class="translatable">账号信息</h2>
-    
-    <form action="{{ url_for('auth.profile') }}" method="post">
 
-        <div class="form-group">
+    <div class="identity-section section">
+        <label for="identity">身份栏</label>
+        <div class="identity-container" style="display: flex; align-items: center; gap: 10px;">
+            <div style="display: flex;">
+                <button type="button" class="btn btn-secondary identity-toggle-btn" data-identity-type="developer">开发</button>
+                <a href="#" class="btn btn-outline-primary edit-identity-btn" id="edit-developer-btn" style="display: none;">编辑开发简历</a>
+            </div>
+            <div style="display: flex;">
+                <button type="button" class="btn btn-secondary identity-toggle-btn" data-identity-type="customer">客户</button>
+                <a href="#" class="btn btn-outline-primary edit-identity-btn" id="edit-customer-btn" style="display: none;">编辑客户简历</a>
+            </div>
+        </div>
+    </div>
+
+    <form action="{{ url_for('auth.profile') }}" method="post" class="form-horizontal section" role="form">
+
+        <div class="form-group inline-grid">
             <label for="username" class="translatable">账号名</label>
-            <input type="text" id="username" name="username" value="{{ user.username or '' }}">
+            <input type="text" id="username" name="username" value="">
         </div>
 
-        <div class="form-group">
+        <div class="form-group inline-grid">
             <label for="real_name" class="translatable">姓名</label>
-            <input type="text" id="real_name" name="real_name" value="{{ user.real_name or '' }}">
+            <input type="text" id="real_name" name="real_name" value="">
         </div>
-        
-        <div class="form-group">
+
+        <div class="form-group inline-grid">
             <label for="id_card" class="translatable">身份证号</label>
-            <input type="text" id="id_card" name="id_card" value="{{ user.id_card or '' }}">
+            <input type="text" id="id_card" name="id_card" value="">
         </div>
-        
-        <div class="form-group">
+
+        <div class="form-group inline-grid">
             <label for="phone" class="translatable">手机号码</label>
-            <input type="tel" id="phone" name="phone" value="{{ user.phone or '' }}">
+            <input type="tel" id="phone" name="phone" value="">
         </div>
-        
-        <div class="form-group">
+
+        <div class="form-group inline-grid">
             <label for="qq" class="translatable">QQ</label>
-            <input type="text" id="qq" name="qq" value="{{ user.qq or '' }}">
+            <input type="text" id="qq" name="qq" value="">
         </div>
-        
-        <div class="form-group">
+
+        <div class="form-group inline-grid">
             <label for="wechat" class="translatable">微信</label>
-            <input type="text" id="wechat" name="wechat" value="{{ user.wechat or '' }}">
+            <input type="text" id="wechat" name="wechat" value="">
         </div>
-        
-        <div class="form-group">
+
+        <div class="form-group inline-grid">
             <label for="email" class="translatable">邮箱</label>
-            <input type="email" id="email" name="email" value="{{ user.email or '' }}">
+            <input type="email" id="email" name="email" value="">
         </div>
-        
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">保存信息</button>
+
+        <div class="form-actions d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary me-2">保存信息</button>
             <a href="{{ url_for('auth.change_password') }}" class="btn btn-secondary translatable">更改密码</a>
         </div>
     </form>
 </div>
+
+
+
+<div class="developer-profile-section">
+    <div class="main-content">
+        <h3>开发者简历</h3>
+        <form action="{{ url_for('user.edit_developer_profile') }}" method="post" class="section">
+            <div class="form-group">
+                <label for="dev_skills" class="translatable">开发技能 (请用逗号分隔)</label>
+                <input type="text" id="dev_skills" name="dev_skills" value="">
+            </div>
+            <div class="form-group">
+                <label for="description" class="translatable">个人描述</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="note" class="translatable">备注</label>
+                <textarea id="note" name="note"></textarea>
+            </div>
+            <div class="form-actions d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary translatable">保存开发者简历</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+/* Responsive styles for identity container */
+@media (max-width: 500px) {
+    .identity-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .identity-container > div {
+        margin-bottom: 10px; /* Add some space between the stacked items */
+    }
+}
+
+.inline-grid {
+    display: inline-grid;
+}
+
+.section {
+    margin-bottom: 10px;
+    border-radius: inherit;
+    border-style: solid;
+    border-color: burlywood;
+    background-color: antiquewhite;
+
+}
+</style>
+
+<script>
+    // render frontend js user_this from backend Jinja user_data
+    let user_this = JSON.parse('{{ user_data | tojson }}');
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButtons = document.querySelectorAll('.identity-toggle-btn');
+        const editDeveloperBtn = document.getElementById('edit-developer-btn');
+        const editCustomerBtn = document.getElementById('edit-customer-btn');
+        const developerProfileSection = document.querySelector('.developer-profile-section'); // Get the developer profile section
+
+        // Get references to elements
+        const usernameInput = document.getElementById('username');
+        const realNameInput = document.getElementById('real_name');
+        const idCardInput = document.getElementById('id_card');
+        const phoneInput = document.getElementById('phone');
+        const qqInput = document.getElementById('qq');
+        const wechatInput = document.getElementById('wechat');
+        const emailInput = document.getElementById('email');
+        const devSkillsInput = document.getElementById('dev_skills');
+        const descriptionTextarea = document.getElementById('description');
+        const noteTextarea = document.getElementById('note');
+        const developerIdentityButton = document.querySelector('.identity-toggle-btn[data-identity-type="developer"]');
+        const customerIdentityButton = document.querySelector('.identity-toggle-btn[data-identity-type="customer"]');
+
+
+        // Populate form fields
+        if (user_this) {
+            if (usernameInput) usernameInput.value = user_this.username || '';
+            if (realNameInput) realNameInput.value = user_this.real_name || '';
+            if (idCardInput) idCardInput.value = user_this.id_card || '';
+            if (phoneInput) phoneInput.value = user_this.phone || '';
+            if (qqInput) qqInput.value = user_this.qq || '';
+            if (wechatInput) wechatInput.value = user_this.wechat || '';
+            if (emailInput) emailInput.value = user_this.email || '';
+            if (devSkillsInput) devSkillsInput.value = user_this.dev_skills || '';
+            if (descriptionTextarea) descriptionTextarea.value = user_this.description || '';
+            if (noteTextarea) noteTextarea.value = user_this.note || '';
+
+            // Set identity button active states
+            if (developerIdentityButton) {
+                if (user_this.is_devlop) {
+                    developerIdentityButton.classList.add('active');
+                } else {
+                    developerIdentityButton.classList.remove('active');
+                }
+            }
+             if (customerIdentityButton) {
+                if (user_this.is_custom) {
+                    customerIdentityButton.classList.add('active');
+                } else {
+                    customerIdentityButton.classList.remove('active');
+                }
+            }
+
+
+            // Control visibility of developer profile section and edit links
+            if (developerProfileSection) {
+                 developerProfileSection.style.display = user_this.is_devlop ? 'block' : 'none';
+            }
+            if (editDeveloperBtn) {
+                 editDeveloperBtn.style.display = user_this.is_devlop ? 'inline-block' : 'none';
+            }
+            if (editCustomerBtn) {
+                 editCustomerBtn.style.display = user_this.is_custom ? 'inline-block' : 'none';
+            }
+        }
+
+
+        // ... rest of existing script code (toggleButtons event listener) ...
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const identityType = this.getAttribute('data-identity-type');
+                const isActive = this.classList.contains('active');
+                const newState = !isActive;
+
+                fetch('{{ url_for("user.toggle_identity") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ identity_type: identityType, state: newState }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.classList.toggle('active', newState);
+                        if (identityType === 'developer') {
+                            editDeveloperBtn.style.display = newState ? 'inline-block' : 'none';
+                            // Dynamically show/hide the developer profile section
+                            if (developerProfileSection) {
+                                developerProfileSection.style.display = newState ? 'block' : 'none';
+                            }
+                        } else if (identityType === 'customer') {
+                            editCustomerBtn.style.display = newState ? 'inline-block' : 'none';
+                        }
+                        // Optionally show a success message
+                        // alert(data.message);
+                    } else {
+                        // Optionally show an error message
+                        alert('更新失败: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('发生错误，请稍后再试。');
+                });
+            });
+        });
+    });
+</script>
 {% endblock %}
