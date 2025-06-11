@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <form action="{{ url_for('auth.profile') }}" method="post" class="form-horizontal section" role="form">
+    <form action="{{ url_for('user.profile') }}" method="post" class="form-horizontal section" role="form">
 
         <div class="form-group inline-grid">
             <label for="username" class="translatable">账号名</label>
@@ -55,6 +55,17 @@
         <div class="form-group inline-grid">
             <label for="email" class="translatable">邮箱</label>
             <input type="email" id="email" name="email" value="">
+        </div>
+
+        <!-- GitHub 绑定状态 -->
+        <div class="form-group inline-grid">
+            <label class="translatable">GitHub 绑定</label>
+            {% if user.github_id %}
+                <span>已绑定 GitHub 账号 ({{ user.github }})</span>
+                <button type="button" id="unbind-github-btn" class="btn btn-danger btn-sm translatable">解绑 GitHub 账号</button>
+            {% else %}
+                <a href="{{ url_for('auth.github_login') }}" class="btn btn-secondary translatable">绑定 GitHub 账号</a>
+            {% endif %}
         </div>
 
         <div class="form-actions d-flex justify-content-end">
@@ -223,6 +234,41 @@
                 });
             });
         });
+
+        // Handle unbind GitHub button click
+        const unbindGithubBtn = document.getElementById('unbind-github-btn');
+        if (unbindGithubBtn) {
+            unbindGithubBtn.addEventListener('click', function() {
+                const password = prompt('请输入密码解绑 GitHub 账号:');
+
+                if (password === null) { // 用户取消了 prompt
+                    return;
+                }
+
+                if (confirm('确定要解绑 GitHub 账号吗？')) {
+                    fetch('{{ url_for("auth.unbind_github") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ password: password })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            window.location.reload(); // Reload the page to show updated status
+                        } else {
+                            alert('解绑失败: ' + data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert('发生错误，请稍后再试。');
+                    });
+                }
+            });
+        }
     });
 </script>
 {% endblock %}

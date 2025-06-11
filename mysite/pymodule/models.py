@@ -28,10 +28,12 @@ class User(db.Model):
     id_card = db.Column(db.String(18))
     qq = db.Column(db.String(20))
     wechat = db.Column(db.String(50))
+    github = db.Column(db.String(100)) # 添加 GitHub 用户名字段
 
     # 第三方登录字段
     wechat_openid = db.Column(db.String(100))
     qq_openid = db.Column(db.String(100))
+    github_id = db.Column(db.String(100), unique=True, nullable=True) # 添加 GitHub ID 字段
 
     # 关联信函
     letters = db.relationship('Letter', backref='author', lazy=True)

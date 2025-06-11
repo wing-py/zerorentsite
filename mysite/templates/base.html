@@ -18,7 +18,7 @@
                     <li><a href="{{ url_for('order.list_order') }}" class="translatable">浏览订单</a></li>
                     <li><a href="{{ url_for('user.list_worker') }}" class="translatable">寻找开发者</a></li>
                     {% if session.user_id %}
-                        <li><a href="{{ url_for('auth.profile') }}" class="translatable">个人信息</a></li>
+                        <li><a href="{{ url_for('user.profile') }}" class="translatable">个人信息</a></li>
                         <li><a href="{{ url_for('auth.logout') }}" class="translatable">注销({{ session.username }})</a></li>
                     {% else %}
                         <li><a href="{{ url_for('auth.login') }}" class="header-button"><span class="translatable">登录</span></a></li>

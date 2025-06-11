@@ -6,9 +6,19 @@ user_bp = Blueprint('user', __name__)
 # 寻找开发者
 @user_bp.route('/list_worker')
 def list_worker():
-    users = User.query.all()
-    return render_template('list_worker.html', users=users)
+    user_count = User.query.count()
+    users = User.query.order_by(User.created_at).all()
+    users_data = []
+    for user in users:
+        user_data = {}
+        for column in user.__table__.columns:
+            # Exclude sensitive fields like password
+            if column.name not in ['password']:
+                 user_data[column.name] = getattr(user, column.name)
+        users_data.append(user_data)
+    return render_template('list_worker.html', user_count=user_count, users=users, users_data=users_data)
 
+# 用户更换身份
 @user_bp.route('/toggle_identity', methods=['POST'])
 def toggle_identity():
     user_id = session.get('user_id')
@@ -42,6 +52,7 @@ def toggle_identity():
         db.session.rollback()
         return jsonify({'success': False, 'message': f'更新失败: {str(e)}'}), 500
 
+# 用户编辑开发简历
 @user_bp.route('/edit_developer_profile', methods=['POST'])
 def edit_developer_profile():
     user_id = session.get('user_id')
@@ -68,14 +79,15 @@ def edit_developer_profile():
     try:
         db.session.commit()
         flash('开发者简历更新成功', 'success')
-        return redirect(url_for('auth.profile'))
+        return redirect(url_for('user.profile'))
     except Exception as e:
         db.session.rollback()
         flash(f'更新开发者简历失败: {str(e)}', 'danger')
-        return redirect(url_for('auth.profile'))
+        return redirect(url_for('user.profile'))
 
-@user_bp.route('/profile/<string:user_id>')
-def profile(user_id):
+# 查看某用户详情
+@user_bp.route('/viewuser/<string:user_id>')
+def viewuser(user_id):
     user = User.query.get(user_id)
     if not user:
         flash('用户不存在', 'danger')
@@ -89,3 +101,36 @@ def profile(user_id):
              user_data[column.name] = getattr(user, column.name)
 
     return render_template('profile.html', user=user_data) # Pass the dictionary
+
+# 个人信息页面
+@user_bp.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if not session.get('user_id'):
+        flash('请先登录')
+        return redirect(url_for('auth.login'))
+
+    user = User.query.get(session['user_id'])
+
+    if request.method == 'POST':
+        # 更新用户信息
+        user.username = request.form.get('username')
+        user.real_name = request.form.get('real_name')
+        user.id_card = request.form.get('id_card')
+        user.phone = request.form.get('phone')
+        user.qq = request.form.get('qq')
+        user.wechat = request.form.get('wechat')
+        user.email = request.form.get('email')
+
+        db.session.commit()
+
+        flash('个人信息已更新')
+        return redirect(url_for('user.profile'))
+    
+    # Dynamically create a dictionary from user object columns
+    user_data = {}
+    for column in user.__table__.columns:
+        # Exclude sensitive fields like password
+        if column.name != 'password':
+             user_data[column.name] = getattr(user, column.name)
+
+    return render_template('profile.html', user=user, user_data=user_data)

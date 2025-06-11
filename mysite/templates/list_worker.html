@@ -5,21 +5,26 @@
 {% block content %}
 <div class="main-content">
     <h1>开发者列表</h1>
+    <p>注册用户总数: {{ user_count }}</p>
     <table>
         <thead>
             <tr>
-                <th>账号</th>
                 <th>用户名</th>
+                <th>注册日期</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
             <tr>
-                <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
+                <td>{{ user.created_at.strftime('%Y-%m-%d %H:%m') }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+<script>
+    // render frontend js users_this from backend Jinja users_data
+    let users_this = JSON.parse('{{ users_data | tojson }}');
+</script>
 {% endblock %}

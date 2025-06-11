@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON 阅读器</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .input-area, .output-area {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto; /* Add scroll if content overflows */
+        }
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            border: none;
+            outline: none;
+            resize: vertical;
+            font-family: monospace;
+        }
+        .json-tree {
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .json-tree ul {
+            list-style: none;
+            padding-left: 20px;
+            margin: 0;
+        }
+        .json-tree li {
+            margin: 2px 0;
+            position: relative;
+        }
+        .json-tree li::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #ccc;
+        }
+        .json-tree li:last-child::before {
+            height: 50%;
+        }
+        .json-tree li:not(:last-child)::before {
+             height: 100%;
+        }
+        .json-tree li::after {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            width: 10px;
+            height: 1px;
+            background-color: #ccc;
+        }
+        .json-tree .key {
+            color: #a31515; /* Red */
+            font-weight: bold;
+        }
+        .json-tree .string {
+            color: #008000; /* Green */
+        }
+        .json-tree .number {
+            color: #0000ff; /* Blue */
+        }
+        .json-tree .boolean {
+            color: #0000ff; /* Blue */
+        }
+        .json-tree .null {
+            color: #808080; /* Gray */
+        }
+        .json-tree .object, .json-tree .array {
+            color: #000; /* Black */
+        }
+        .json-tree .toggle {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .json-tree .collapsed > ul {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>简单的 JSON 阅读器</h1>
+
+    <div class="container">
+        <div class="input-area">
+            <h2>输入 JSON</h2>
+            <textarea id="jsonInput" placeholder='粘贴 JSON 文本到这里...'></textarea>
+            <button onclick="renderJson()">解析并显示</button>
+        </div>
+        <div class="output-area">
+            <h2>JSON 树</h2>
+            <div id="jsonOutput" class="json-tree"></div>
+        </div>
+    </div>
+
+    <script>
+        function renderJson() {
+            const jsonInput = document.getElementById('jsonInput').value;
+            const jsonOutput = document.getElementById('jsonOutput');
+            jsonOutput.innerHTML = ''; // Clear previous output
+
+            try {
+                const data = JSON.parse(jsonInput);
+                jsonOutput.appendChild(buildTree(data));
+            } catch (e) {
+                jsonOutput.innerHTML = `<p style="color: red;">JSON 解析错误: ${e.message}</p>`;
+            }
+        }
+
+        function buildTree(data) {
+            const ul = document.createElement('ul');
+
+            if (data === null) {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="null">null</span>`;
+                ul.appendChild(li);
+            } else if (typeof data === 'object') {
+                for (const key in data) {
+                    if (Object.hasOwnProperty.call(data, key)) {
+                        const value = data[key];
+                        const li = document.createElement('li');
+                        const keySpan = document.createElement('span');
+                        keySpan.className = 'key';
+                        keySpan.textContent = `"${key}": `;
+
+                        li.appendChild(keySpan);
+
+                        if (typeof value === 'object' && value !== null) {
+                            const toggleSpan = document.createElement('span');
+                            toggleSpan.className = 'toggle';
+                            toggleSpan.textContent = (Array.isArray(value) ? '[...]' : '{...}');
+                            toggleSpan.onclick = function() {
+                                li.classList.toggle('collapsed');
+                                toggleSpan.textContent = li.classList.contains('collapsed') ? (Array.isArray(value) ? '[...]' : '{...}') : (Array.isArray(value) ? '[-]' : '{-}');
+                            };
+                            li.appendChild(toggleSpan);
+                            li.appendChild(buildTree(value));
+                            li.classList.add('collapsed'); // Start collapsed
+                        } else {
+                            const valueSpan = document.createElement('span');
+                            valueSpan.className = typeof value;
+                            valueSpan.textContent = JSON.stringify(value); // Use JSON.stringify to handle strings with quotes
+                            li.appendChild(valueSpan);
+                        }
+                        ul.appendChild(li);
+                    }
+                }
+            } else {
+                 const li = document.createElement('li');
+                 const valueSpan = document.createElement('span');
+                 valueSpan.className = typeof data;
+                 valueSpan.textContent = JSON.stringify(data);
+                 li.appendChild(valueSpan);
+                 ul.appendChild(li);
+            }
+
+            return ul;
+        }
+    </script>
+</body>
+</html>
