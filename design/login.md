@@ -145,4 +145,11 @@
 
 -   **密码存储**: 使用 [`werkzeug.security`](mysite/mainapp.py:5) 的 [`generate_password_hash`](mysite/mainapp.py:73) 对用户密码进行加盐哈希处理，而不是明文存储。
 -   **密码验证**: 使用 [`check_password_hash`](mysite/mainapp.py:95) 安全地验证用户输入的密码与存储的哈希值。
--   **会话管理**: 使用 Flask 内置的 [`session`](mysite/mainapp.py:96) 来管理用户登录状态，会话数据默认存储在客户端的 Cookie 中，并经过签名以防止篡改。需要配置 `SECRET_KEY` 来确保会话安全。
+-   **会话管理**: 使用 Flask 内置的 [`session`](mysite/mainapp.py:96) 来管理用户登录状态，会话数据默认存储在客户端的 Cookie 中，并经过签名以防止篡改。需要配置 `SECRET_KEY` 来确保会话安全。   
+
+## 9. github OAuth
+1. github帐号未绑定本站帐号一键注册
+2. github帐号已绑定本站帐号一键登录
+3. 用户个人主页绑定github帐号
+4. 用户个人主页解绑github帐号
+   1. 需验证密码防止用户失去所有登录手段

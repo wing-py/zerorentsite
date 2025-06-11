@@ -16,3 +16,8 @@ def about():
 @main_bp.route('/progress')
 def progress():
     return render_template('progress.html')
+
+# JSON 阅读器
+@main_bp.route('/json_reader')
+def json_reader():
+    return render_template('json_reader.html')
