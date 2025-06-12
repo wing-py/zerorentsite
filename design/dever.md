@@ -4,6 +4,7 @@ website design docs for developer thing
 
 
 # data_structure
+## user
 is_devlop # 是否是开发身份
 is_custom # 是否是客户身份
 
@@ -51,16 +52,31 @@ description
 note
 
 preferences
-category_preference  开发类目偏好: program,pcb,3d-model
+category_preference  开发类目偏好: program,pcb-design,3d-model
 language_preference  开发语言偏好: python,c,c++,js,html,css,rust
 framework_preference 开发框架偏好: flutter
 tool_preference      开发工具偏好: vscode,kicad,keil
 applicant_preference 开发功能偏好: website,aiapi,ocr,llm
 platform_preference  开发平台偏好: android,web,wxapp,windows,macos,isos,linux
 
-projects
+
+skill-category:
+
+### program:
+language:python,c,c++,js,html,css,rust
+tool:vscode,keil
+framework:flutter
+applicant:website,aiapi,ocr,llm
+platform:android,web,wxapp,windows,macos,isos,linux
 
 
+## project
+id     # 数据项id
+who    # 参与人
+job    # 参与工作
+url    # 项目链接
+name   # 项目名称
+intro  # 项目介绍
 
 # user_operation
 ## 用户设置身份标记
