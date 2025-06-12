@@ -80,7 +80,7 @@
 <div class="developer-profile-section">
     <div class="main-content">
         <h3>开发者简历</h3>
-        <form action="{{ url_for('user.edit_developer_profile') }}" method="post" class="section">
+        <form action="{{ url_for('user.edit_developer_profile') }}" method="post" class="section" id="developer-profile-form">
             <div class="form-group">
                 <label for="dev_skills" class="translatable">开发技能 (请用逗号分隔)</label>
                 <input type="text" id="dev_skills" name="dev_skills" value="">
@@ -93,8 +93,46 @@
                 <label for="note" class="translatable">备注</label>
                 <textarea id="note" name="note"></textarea>
             </div>
+
+            <h4>项目信息</h4>
+            <!-- Area to display existing project cards -->
+            <div id="projectCardsContainer" class="section">
+                <h5>已注册项目</h5>
+                <!-- Project cards will be added here by JavaScript -->
+            </div>
+
+            <!-- Button to toggle new project registration form -->
+            <button type="button" id="toggleNewProjectFormBtn" class="btn btn-secondary btn-sm translatable">注册新项目</button>
+
+            <!-- New project registration form (initially hidden) -->
+            <div id="newProjectFormArea" style="display: none;" class="section">
+                <h5>注册/编辑项目</h5>
+                <div id="newProjectForm">
+                    <input type="hidden" name="project_id" id="project_id" value=""> {# Hidden input for project ID when editing #}
+                    <div class="form-group">
+                        <label for="project_name" class="translatable">项目名称</label>
+                        <input type="text" name="project_name" id="project_name" placeholder="项目名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="project_job" class="translatable">参与工作</label>
+                        <input type="text" name="project_job" id="project_job" placeholder="参与工作">
+                    </div>
+                    <div class="form-group">
+                        <label for="project_url" class="translatable">项目链接</label>
+                        <input type="url" name="project_url" id="project_url" placeholder="项目链接">
+                    </div>
+                     <div class="form-group">
+                        <label for="project_text" class="translatable">项目介绍</label>
+                        <textarea name="project_text" id="project_text" placeholder="项目介绍"></textarea>
+                    </div>
+                    <button type="button" id="saveProjectBtn" class="btn btn-primary btn-sm translatable">保存项目</button>
+                    <button type="button" id="cancelEditBtn" class="btn btn-secondary btn-sm translatable">取消</button>
+                </div>
+            </div>
+
             <div class="form-actions d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary translatable">保存开发者简历</button>
+                <!-- The "保存开发者简历和项目" button remains -->
+                <button type="submit" class="btn btn-primary translatable">保存开发者简历和项目</button>
             </div>
         </form>
     </div>
@@ -128,7 +166,9 @@
 
 <script>
     // render frontend js user_this from backend Jinja user_data
+    // render frontend js user_this and projects from backend Jinja user_data and projects
     let user_this = JSON.parse('{{ user_data | tojson }}');
+    user_this.projects = JSON.parse('{{ projects | tojson }}');
 
     document.addEventListener('DOMContentLoaded', function() {
         const toggleButtons = document.querySelectorAll('.identity-toggle-btn');
@@ -149,6 +189,19 @@
         const noteTextarea = document.getElementById('note');
         const developerIdentityButton = document.querySelector('.identity-toggle-btn[data-identity-type="developer"]');
         const customerIdentityButton = document.querySelector('.identity-toggle-btn[data-identity-type="customer"]');
+
+        // Project related elements
+        const projectCardsContainer = document.getElementById("projectCardsContainer");
+        const toggleNewProjectFormBtn = document.getElementById("toggleNewProjectFormBtn");
+        const newProjectFormArea = document.getElementById("newProjectFormArea");
+        const newProjectForm = document.getElementById("newProjectForm");
+        const saveProjectBtn = document.getElementById("saveProjectBtn");
+        const cancelEditBtn = document.getElementById("cancelEditBtn");
+        const projectIdInput = document.getElementById("project_id");
+        const projectNameInput = newProjectForm.querySelector('input[name="project_name"]');
+        const projectJobInput = newProjectForm.querySelector('input[name="project_job"]');
+        const projectUrlInput = newProjectForm.querySelector('input[name="project_url"]');
+        const projectTextarea = newProjectForm.querySelector('textarea[name="project_text"]');
 
 
         // Populate form fields
@@ -180,7 +233,6 @@
                 }
             }
 
-
             // Control visibility of developer profile section and edit links
             if (developerProfileSection) {
                  developerProfileSection.style.display = user_this.is_devlop ? 'block' : 'none';
@@ -190,6 +242,183 @@
             }
             if (editCustomerBtn) {
                  editCustomerBtn.style.display = user_this.is_custom ? 'inline-block' : 'none';
+            }
+
+            // Load and display existing projects as cards
+            if (user_this.is_devlop && user_this.projects && Array.isArray(user_this.projects)) {
+                displayProjectCards(user_this.projects);
+            }
+        }
+
+        // Function to create a project card
+        function createProjectCard(project) {
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card', 'mb-3'); // Add Bootstrap card classes
+            cardDiv.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">${project.name || '无标题项目'}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${project.job || '无参与工作信息'}</h6>
+                    <p class="card-text">${project.text || '无项目介绍'}</p>
+                    ${project.url ? `<a href="${project.url}" class="card-link" target="_blank">项目链接</a>` : ''}
+                    <button type="button" class="btn btn-primary btn-sm edit-project-btn" data-project-id="${project.id}">修改</button>
+                    <button type="button" class="btn btn-danger btn-sm delete-project-btn" data-project-id="${project.id}">删除</button>
+                </div>
+            `;
+
+            // Add event listeners to buttons
+            cardDiv.querySelector('.edit-project-btn').addEventListener('click', function() {
+                editProject(project.id);
+            });
+            cardDiv.querySelector('.delete-project-btn').addEventListener('click', function() {
+                deleteProject(project.id);
+            });
+
+            return cardDiv;
+        }
+
+        // Function to display project cards
+        function displayProjectCards(projects) {
+            if (projectCardsContainer) {
+                projectCardsContainer.innerHTML = ''; // Clear existing cards
+                if (projects.length > 0) {
+                    projects.forEach(project => {
+                        const card = createProjectCard(project);
+                        projectCardsContainer.appendChild(card);
+                    });
+                } else {
+                    projectCardsContainer.innerHTML = '<p>暂无已注册项目。</p>';
+                }
+            }
+        }
+
+        // Function to show the new project form for adding or editing
+        function showProjectForm(project = null) {
+            if (newProjectFormArea) {
+                newProjectFormArea.style.display = 'block';
+                // Populate form if editing
+                if (project) {
+                    projectIdInput.value = project.id || '';
+                    projectNameInput.value = project.name || '';
+                    projectJobInput.value = project.job || '';
+                    projectUrlInput.value = project.url || '';
+                    projectTextarea.value = project.text || '';
+                } else { // Clear form if adding new
+                    projectIdInput.value = '';
+                    projectNameInput.value = '';
+                    projectJobInput.value = '';
+                    projectUrlInput.value = '';
+                    projectTextarea.value = '';
+                }
+            }
+        }
+
+        // Function to hide the new project form
+        function hideProjectForm() {
+            if (newProjectFormArea) {
+                newProjectFormArea.style.display = 'none';
+                // Clear form fields
+                projectIdInput.value = '';
+                projectNameInput.value = '';
+                projectJobInput.value = '';
+                projectUrlInput.value = '';
+                projectTextarea.value = '';
+            }
+        }
+
+        // Event listener for "注册新项目" button
+        if (toggleNewProjectFormBtn) {
+            toggleNewProjectFormBtn.addEventListener('click', function() {
+                if (newProjectFormArea.style.display === 'none') {
+                    showProjectForm(); // Show form for adding new project
+                } else {
+                    hideProjectForm(); // Hide form
+                }
+            });
+        }
+
+        // Event listener for "取消" button
+        if (cancelEditBtn) {
+            cancelEditBtn.addEventListener('click', function() {
+                hideProjectForm();
+            });
+        }
+
+        // Event listener for "保存项目" button
+        if (saveProjectBtn) {
+            saveProjectBtn.addEventListener('click', function() {
+                const projectData = {
+                    id: projectIdInput.value,
+                    name: projectNameInput.value,
+                    job: projectJobInput.value,
+                    url: projectUrlInput.value,
+                    text: projectTextarea.value
+                };
+
+                // Determine if adding or editing
+                const isEditing = !!projectData.id;
+                // Assuming backend routes for project operations
+                const url = isEditing ? '{{ url_for("user.edit_project") }}' : '{{ url_for("user.add_project") }}';
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(projectData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        hideProjectForm();
+                        // Reload or update project cards
+                        // TODO
+                    } else {
+                        alert('保存失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('发生错误，请稍后再试。');
+                });
+            });
+        }
+
+        // Function to handle editing a project (populates the form)
+        function editProject(projectId) {
+            // Find the project in user_this.projects
+            const projectToEdit = user_this.projects.find(p => p.id == projectId);
+            if (projectToEdit) {
+                showProjectForm(projectToEdit);
+            } else {
+                alert('未找到项目进行编辑。');
+            }
+        }
+
+        // Function to handle deleting a project
+        function deleteProject(projectId) {
+            if (confirm('确定要删除此项目吗？')) {
+                fetch('{{ url_for("user.delete_project") }}', { // Assuming backend route
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ project_id: projectId }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        // Reload or remove the card
+                        window.location.reload(); // Simple reload for now
+                    } else {
+                        alert('删除失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('发生错误，请稍后再试。');
+                });
             }
         }
 
@@ -217,6 +446,12 @@
                             // Dynamically show/hide the developer profile section
                             if (developerProfileSection) {
                                 developerProfileSection.style.display = newState ? 'block' : 'none';
+                                // If becoming a developer, display projects
+                                if (newState && user_this && user_this.projects) {
+                                     displayProjectCards(user_this.projects);
+                                } else if (!newState && projectCardsContainer) {
+                                    projectCardsContainer.innerHTML = ''; // Clear cards if not developer
+                                }
                             }
                         } else if (identityType === 'customer') {
                             editCustomerBtn.style.display = newState ? 'inline-block' : 'none';
