@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from .models import db, Order, User, Comment
+from .models import db, Order, User, Comment, Project
 
 user_bp = Blueprint('user', __name__)
 
@@ -76,13 +76,30 @@ def edit_developer_profile():
     user.description = description
     user.note = note
 
+    # 获取项目数据
+    project_job = request.form.get('project_job')
+    project_url = request.form.get('project_url')
+    project_name = request.form.get('project_name')
+    project_text = request.form.get('project_text')
+
+    # 如果有项目数据，则创建新项目并关联到用户
+    if project_job or project_url or project_name or project_text:
+        new_project = Project(
+            who=user.id,
+            job=project_job,
+            url=project_url,
+            name=project_name,
+            text=project_text
+        )
+        db.session.add(new_project)
+
     try:
         db.session.commit()
-        flash('开发者简历更新成功', 'success')
+        flash('开发者简历和项目信息更新成功', 'success')
         return redirect(url_for('user.profile'))
     except Exception as e:
         db.session.rollback()
-        flash(f'更新开发者简历失败: {str(e)}', 'danger')
+        flash(f'更新开发者简历和项目信息失败: {str(e)}', 'danger')
         return redirect(url_for('user.profile'))
 
 # 查看某用户详情
@@ -133,4 +150,117 @@ def profile():
         if column.name != 'password':
              user_data[column.name] = getattr(user, column.name)
 
-    return render_template('profile.html', user=user, user_data=user_data)
+    # Fetch user's projects
+    user_projects = Project.query.filter_by(who=user.id).all()
+    # Convert projects to a list of dictionaries for JSON serialization
+    projects_data = []
+    for project in user_projects:
+        project_data = {}
+        for column in project.__table__.columns:
+            project_data[column.name] = getattr(project, column.name)
+        projects_data.append(project_data)
+
+
+    return render_template('profile.html', user=user, user_data=user_data, projects=projects_data)
+
+# 添加新项目
+@user_bp.route('/add_project', methods=['POST'])
+def add_project():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'message': '用户未登录'}), 401
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'success': False, 'message': '用户不存在'}), 404
+
+    data = request.get_json()
+    name = data.get('name')
+    job = data.get('job')
+    url = data.get('url')
+    text = data.get('text')
+
+    if not name:
+        return jsonify({'success': False, 'message': '项目名称不能为空'}), 400
+
+    new_project = Project(
+        who=user.id,
+        name=name,
+        job=job,
+        url=url,
+        text=text
+    )
+
+    try:
+        db.session.add(new_project)
+        db.session.commit()
+        return jsonify({'success': True, 'message': '项目添加成功'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'项目添加失败: {str(e)}'}), 500
+
+# 编辑项目
+@user_bp.route('/edit_project', methods=['POST'])
+def edit_project():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'message': '用户未登录'}), 401
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'success': False, 'message': '用户不存在'}), 404
+
+    data = request.get_json()
+    project_id = data.get('id')
+    name = data.get('name')
+    job = data.get('job')
+    url = data.get('url')
+    text = data.get('text')
+
+    if not project_id:
+        return jsonify({'success': False, 'message': '项目ID不能为空'}), 400
+
+    project = Project.query.filter_by(id=project_id, who=user.id).first()
+    if not project:
+        return jsonify({'success': False, 'message': '项目不存在或无权编辑'}), 404
+
+    project.name = name
+    project.job = job
+    project.url = url
+    project.text = text
+
+    try:
+        db.session.commit()
+        return jsonify({'success': True, 'message': '项目更新成功'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'项目更新失败: {str(e)}'}), 500
+
+# 删除项目
+@user_bp.route('/delete_project', methods=['POST'])
+def delete_project():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'message': '用户未登录'}), 401
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'success': False, 'message': '用户不存在'}), 404
+
+    data = request.get_json()
+    project_id = data.get('project_id')
+
+    if not project_id:
+        return jsonify({'success': False, 'message': '项目ID不能为空'}), 400
+
+    project = Project.query.filter_by(id=project_id, who=user.id).first()
+    if not project:
+        return jsonify({'success': False, 'message': '项目不存在或无权删除'}), 404
+
+    try:
+        db.session.delete(project)
+        db.session.commit()
+        return jsonify({'success': True, 'message': '项目删除成功'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'项目删除失败: {str(e)}'}), 500

@@ -88,3 +88,15 @@ class Comment(db.Model):
     who_comment = db.relationship('User', backref='order_comments')
     what_comment = db.Column(db.Text) # what_comment 意见陈述
     comment_time = db.Column(db.DateTime, default=datetime.now) # When the comment was made
+
+# Project Model
+class Project(db.Model):
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4())) # 数据项id
+    who = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False) # 参与人id
+    job = db.Column(db.String(200)) # 参与工作
+    url = db.Column(db.String(200)) # 项目链接
+    name = db.Column(db.String(200)) # 项目名称
+    text = db.Column(db.String(200)) # 项目介绍文件路径
+
+    # Establish relationship with User
+    developer = db.relationship('User', backref='projects')
