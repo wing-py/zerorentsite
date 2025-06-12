@@ -1,6 +1,9 @@
 /* 基础样式重置 */
 body {
     background-color: #f8f9fa; /* Lighter gray background */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes at least full viewport height */
 }
 
 .container {
@@ -275,6 +278,7 @@ nav ul li a:hover {
 /* 主要内容区域 */
 main {
     padding: 40px 0;
+    flex-grow: 1; /* Allow main content to grow and push footer down */
 }
 
 /* 页脚 */
