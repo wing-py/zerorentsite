@@ -231,6 +231,11 @@ li {
     gap: 10px;
 }
 
+div.message {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    display: none;
+}
 
 
 /* 导航栏 */
@@ -329,6 +334,17 @@ footer p {
         flex-direction: column;
         gap: 10px;
     }
+}
+
+/* 常用样式类 */
+.purple {
+    color:purple;
+}
+.red {
+    color:red;
+}
+.green {
+    color:green;
 }
 
 /* 信息公示页面样式 */
