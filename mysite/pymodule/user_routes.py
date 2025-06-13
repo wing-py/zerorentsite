@@ -103,8 +103,13 @@ def edit_developer_profile():
         return redirect(url_for('user.profile'))
 
 # 查看某用户详情
-@user_bp.route('/viewuser/<string:user_id>')
-def viewuser(user_id):
+@user_bp.route('/view_user/<string:user_id>')
+def view_user(user_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('请先登录才能查看开发者简历', 'warning')
+        return redirect(url_for('auth.login'))
+    
     user = User.query.get(user_id)
     if not user:
         flash('用户不存在', 'danger')
@@ -117,7 +122,18 @@ def viewuser(user_id):
         if column.name != 'password':
              user_data[column.name] = getattr(user, column.name)
 
-    return render_template('profile.html', user=user_data) # Pass the dictionary
+    # Fetch user's projects
+    user_projects = Project.query.filter_by(who=user.id).all()
+    # Convert projects to a list of dictionaries for JSON serialization
+    projects_data = []
+    for project in user_projects:
+        project_data = {}
+        for column in project.__table__.columns:
+            project_data[column.name] = getattr(project, column.name)
+        projects_data.append(project_data)
+
+
+    return render_template('view_user.html', user=user, user_data=user_data, projects=projects_data)
 
 # 个人信息页面
 @user_bp.route('/profile', methods=['GET', 'POST'])

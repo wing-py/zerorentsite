@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}零抽成开发外包平台 - 用户详情{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 translatable">用户详情</h2>
+
+    {# Basic User Information Card #}
+    <div class="card mb-4">
+        <div class="card-header translatable">
+            基本信息
+        </div>
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-3 font-weight-bold translatable">账号名:</div>
+                <div class="col-md-9">{{ user.username }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3 font-weight-bold translatable">QQ:</div>
+                <div class="col-md-9">{{ user.qq or '未填写' }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3 font-weight-bold translatable">微信:</div>
+                <div class="col-md-9">{{ user.wechat or '未填写' }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3 font-weight-bold translatable">邮箱:</div>
+                <div class="col-md-9">{{ user.email or '未填写' }}</div>
+            </div>
+            {# GitHub Binding Status (Display only) #}
+            <div class="row">
+                <div class="col-md-3 font-weight-bold translatable">GitHub 绑定:</div>
+                <div class="col-md-9">
+                    {% if user.github_id %}
+                        已绑定 GitHub 账号 ({{ user.github }})
+                    {% else %}
+                        未绑定 GitHub 账号
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Developer Profile Card if available #}
+    {% if user.is_devlop %}
+    <div class="card mb-4">
+        <div class="card-header translatable">
+            开发者简历
+        </div>
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-3 font-weight-bold translatable">开发技能:</div>
+                <div class="col-md-9">{{ user.dev_skills or '未填写' }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3 font-weight-bold translatable">个人描述:</div>
+                <div class="col-md-9"><pre class="mb-0">{{ user.description or '未填写' }}</pre></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3 font-weight-bold translatable">备注:</div>
+                <div class="col-md-9"><pre class="mb-0">{{ user.note or '未填写' }}</pre></div>
+            </div>
+
+            <h5 class="mt-4 mb-3 translatable">项目信息</h5>
+            <div id="projectCardsContainer">
+                {# Display project cards - need to loop through projects #}
+                {% if projects %}
+                    {% for project in projects %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ project.name or '无标题项目' }}</h6>
+                            <p class="card-subtitle mb-2 text-muted">{{ project.job or '无参与工作信息' }}</p>
+                            <pre class="card-text">{{ project.text or '无项目介绍' }}</pre>
+                            {% if project.url %}
+                                <a href="{{ project.url }}" class="card-link" target="_blank">项目链接</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="translatable">暂无已注册项目。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+/* Custom styles for preformatted text within cards */
+.card-text pre {
+    white-space: pre-wrap; /* Wrap long lines */
+    word-wrap: break-word; /* Break words if necessary */
+    font-family: inherit; /* Use the card's font */
+    font-size: inherit; /* Use the card's font size */
+    color: inherit; /* Use the card's text color */
+    background-color: transparent; /* No background */
+    border: none; /* No border */
+    padding: 0; /* No padding */
+    margin: 0; /* No margin */
+}
+
+/* Optional: Add some basic styling for the main content area if needed */
+/*
+.main-content {
+    padding: 20px;
+}
+*/
+</style>
+
+{% endblock %}
