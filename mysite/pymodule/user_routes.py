@@ -103,14 +103,14 @@ def edit_developer_profile():
         return redirect(url_for('user.profile'))
 
 # 查看某用户详情
-@user_bp.route('/view_user/<string:user_id>')
-def view_user(user_id):
+@user_bp.route('/view_user/<string:that_user_id>')
+def view_user(that_user_id):
     user_id = session.get('user_id')
     if not user_id:
         flash('请先登录才能查看开发者简历', 'warning')
         return redirect(url_for('auth.login'))
     
-    user = User.query.get(user_id)
+    user = User.query.get(that_user_id)
     if not user:
         flash('用户不存在', 'danger')
         return redirect(url_for('main.index'))
@@ -147,6 +147,7 @@ def profile():
     if request.method == 'POST':
         # 更新用户信息
         user.username = request.form.get('username')
+        user.callname = request.form.get('callname') # 保存称呼名
         user.real_name = request.form.get('real_name')
         user.id_card = request.form.get('id_card')
         user.phone = request.form.get('phone')

@@ -24,7 +24,12 @@
 
         <div class="form-group inline-grid">
             <label for="username" class="translatable">账号名</label>
-            <input type="text" id="username" name="username" value="">
+            <input type="text" id="username" name="username" value=""> {# 账号名可以修改 #}
+        </div>
+
+        <div class="form-group inline-grid">
+            <label for="callname" class="translatable">称呼名</label>
+            <input type="text" id="callname" name="callname" value="">
         </div>
 
         <div class="form-group inline-grid">
@@ -177,6 +182,7 @@
 
         // Get references to elements
         const usernameInput = document.getElementById('username');
+        const callnameInput = document.getElementById('callname'); // Get reference to callname input
         const realNameInput = document.getElementById('real_name');
         const idCardInput = document.getElementById('id_card');
         const phoneInput = document.getElementById('phone');
@@ -206,6 +212,7 @@
         // Populate form fields
         if (user_this) {
             if (usernameInput) usernameInput.value = user_this.username || '';
+            if (callnameInput) callnameInput.value = user_this.callname || ''; // 填充称呼名
             if (realNameInput) realNameInput.value = user_this.real_name || '';
             if (idCardInput) idCardInput.value = user_this.id_card || '';
             if (phoneInput) phoneInput.value = user_this.phone || '';
