@@ -13,6 +13,7 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
+        callname = request.form.get('callname') # 获取称呼名
         email = request.form.get('email')
         phone = request.form.get('phone')
 
@@ -30,6 +31,7 @@ def register():
         new_user = User(
             id=str(uuid.uuid4()),
             username=username,
+            callname=callname if callname else username, # 如果称呼名为空，使用账号名
             password=generate_password_hash(password),
             email=email,
             phone=phone

@@ -1,4 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy # type: ignore
 from datetime import datetime
 import uuid
 
@@ -9,6 +9,7 @@ db = SQLAlchemy()
 class User(db.Model):
     id = db.Column(db.String(36), primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
+    callname = db.Column(db.String(50), nullable=True) # 添加称呼名字段
     password = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100))
     phone = db.Column(db.String(20))

@@ -6,6 +6,10 @@ order_bp = Blueprint('order', __name__)
 # 发布订单
 @order_bp.route('/submit_order', methods=['GET', 'POST'])
 def submit_order():
+    if not session.get('user_id'):
+        flash('请先登录才能发布订单')
+        return redirect(url_for('auth.login'))
+
     if request.method == 'POST':
         # Handle form submission
         if not session.get('user_id'):
@@ -17,7 +21,9 @@ def submit_order():
         description = request.form.get('description')
         price = request.form.get('price')
         period = request.form.get('period')
-        contact = request.form.get('contact')
+        contact_type = request.form.get('contact_type')
+        contact_value = request.form.get('contact_value')
+        contact = contact_type + contact_value
 
         # Basic validation
         if not all([category, title, description, price, period, contact]):

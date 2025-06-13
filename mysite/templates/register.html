@@ -12,6 +12,11 @@
             <input type="text" id="username" name="username" required placeholder="用于登录的用户名">
             <div class="message" id="usernameCheckMessage"></div> {# Message area for username check #}
         </div>
+
+        <div class="form-group">
+            <label for="callname" class="translatable">称呼名 (可选)</label>
+            <input type="text" id="callname" name="callname" placeholder="用于称呼的名字，默认为账号名">
+        </div>
         
         <div class="form-group">
             <label for="password" class="translatable">密码</label>
@@ -49,20 +54,8 @@
     </div>
 </div>
 <style>
-    div.message {
-        margin-top: 5px;
-        font-size: 0.9rem;
-        display: none;
-    }
-    .purple {
-        color:purple;
-    }
-    .red {
-        color:red;
-    }
-    .green {
-        color:green;
-    }
+
+
 </style>
 <script>
     const usernameField = document.getElementById('username');

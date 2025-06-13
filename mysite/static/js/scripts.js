@@ -152,3 +152,27 @@ function copyContent(btn) {
         }, 2000); // 2秒后恢复
     });
 }
+
+/* fetch static/md/xx.md to xx.html */
+function fetch_md_to_pre(md_url) {
+    fetch(md_url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then(markdownContent => {
+            const preElement = document.querySelector('.pre-content');
+            if (preElement) {
+                preElement.innerHTML = markdownContent;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching markdown:', error);
+            const preElement = document.querySelector('.pre-content');
+            if (preElement) {
+                preElement.textContent = 'Failed to load content.';
+            }
+        });  
+};

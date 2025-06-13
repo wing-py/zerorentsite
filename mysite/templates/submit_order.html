@@ -8,7 +8,14 @@
     <form method="POST">
         <div class="form-group">
             <label for="category">类目:</label>
-            <input type="text" class="form-control" id="category" name="category" placeholder="例如：网站开发" required>
+            <select class="form-control" id="category" name="category" required>
+                <option value="">请选择类目</option>
+                <option value="网站搭建">网站搭建</option>
+                <option value="硬件研发">硬件研发</option>
+                <option value="移动应用">移动应用</option>
+                <option value="软件开发">软件开发</option>
+            </select>
+            <div class="message red" id="categoryMessage" style="display: block;">请选择一个类目</div> {# Message area for category selection #}
         </div>
         <div class="form-group">
             <label for="title">标题:</label>
@@ -19,18 +26,55 @@
             <textarea class="form-control" id="description" name="description" rows="5" placeholder="请详细描述您的需求，例如：需要一个基于Python的AI网站，具备用户注册、登录、内容发布等功能。" required></textarea>
         </div>
         <div class="form-group">
-            <label for="price">佣金:</label>
-            <input type="number" class="form-control" id="price" name="price" step="0.01" placeholder="例如：800" required>
+            <label for="price">佣金(元):</label>
+            <input type="number" class="form-control" id="price" name="price" step="50" min="100" value="1000" placeholder="例如：800" required>
         </div>
         <div class="form-group">
             <label for="period">工期:</label>
             <input type="text" class="form-control" id="period" name="period" placeholder="例如：7天" required>
         </div>
         <div class="form-group">
-            <label for="contact">联系方式:</label>
-            <input type="text" class="form-control" id="contact" name="contact" placeholder="例如：微信、QQ、邮箱等" required>
+            <label>联系方式:</label>
+            <div class="row">
+                <div class="col-md-4">
+                    <select class="form-control" id="contact_type" name="contact_type" required>
+                        <option value="">选择一种方式</option>
+                        <option value="号码">号码</option>
+                        <option value="QQ">QQ</option>
+                        <option value="微信">微信</option>
+                        <option value="邮箱">邮箱</option>
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="contact_value" name="contact_value" placeholder="填写联系方式详情" required>
+                </div>
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">提交订单</button>
     </form>
 </div>
+<script>
+    /* categoryMessage */
+    const categorySelect = document.getElementById('category');
+    const categoryMessage = document.getElementById('categoryMessage');
+
+    function updateCategoryMessage() {
+        const isCategorySelected = categorySelect.value !== "";
+
+        if (isCategorySelected) {
+            categoryMessage.className = 'message green';
+            categoryMessage.textContent = '已选择订单类目"' + categorySelect.value + '"';
+            categoryMessage.style.display = 'block';
+        } else {
+            categoryMessage.className = 'message red';
+            categoryMessage.textContent = '请选择一个类目';
+            categoryMessage.style.display = 'block';
+        }
+    }
+
+    categorySelect.addEventListener('change', updateCategoryMessage);
+
+    // Initial state update (hide message initially)
+    categoryMessage.style.display = 'none';
+</script>
 {% endblock %}

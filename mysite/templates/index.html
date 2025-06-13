@@ -13,45 +13,7 @@
     <span class="toggle-btn" onclick="toggleContent(this)">展开</span>
     <span class="copy-btn" onclick="copyContent(this)">复制</span>
 </div>
-<pre class="pre-content">
-# 平台介绍
-我们在做一个<b>零抽成</b>的开发外包平台，
-同时也是一个共享共建的平台。
-欢迎大家参与或加入，
-欢迎各种建议或意见，
-欢迎邀请其他可能感兴趣的人参与。
-目前平台相关设施正在建设，
-平台围绕零抽成为根本原则，
-具体的运营机制还在民主讨论。
-
-# 联系方式
-[QQ群号](1045606335)
-微信相关联系人(用于推到微信群):
-[Ooooomega7876]，[wingpython]
-
-# 相关链接
-[<a href="https://zerorent.pythonanywhere.com/">平台官网</a>](https://zerorent.pythonanywhere.com/)
-[<a href="https://github.com/wing-py/zerorentsite">源码仓库</a>](https://github.com/wing-py/zerorentsite)
-[<a href="https://b23.tv/Jluddzg">宣传视频</a>](https://b23.tv/Jluddzg)
-[<a href="https://shop360976992.taobao.com">淘宝店铺</a>](https://shop360976992.taobao.com)
-[<a href="https://item.taobao.com/item.htm?id=924307846345">淘宝商品</a>](https://item.taobao.com/item.htm?id=924307846345)
-
-# 官网介绍
-[<a href="https://zerorent.pythonanywhere.com/list_order">订单列表</a>]
-(https://zerorent.pythonanywhere.com/list_order)
-[<a href="https://zerorent.pythonanywhere.com/submit_order">发布订单</a>]
-(https://zerorent.pythonanywhere.com/submit_order)
-[<a href="https://zerorent.pythonanywhere.com/list_worker">开发者表</a>]
-(https://zerorent.pythonanywhere.com/list_worker)
-[<a href="https://zerorent.pythonanywhere.com/register">注册账户</a>]
-(https://zerorent.pythonanywhere.com/register)
-[<a href="https://zerorent.pythonanywhere.com/forum">意见论坛</a>]
-(https://zerorent.pythonanywhere.com/forum)
-[<a href="https://zerorent.pythonanywhere.com/about">平台介绍</a>]
-(https://zerorent.pythonanywhere.com/about)
-[<a href="https://zerorent.pythonanywhere.com/progress">进展汇报</a>]
-(https://zerorent.pythonanywhere.com/progress)
-</pre>
+<pre class="pre-content"></pre>
 </div>
 
 <div class="features">
@@ -147,4 +109,10 @@
     font-size: 14px; /* Reduced font-size */
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch_md_to_pre('/static/md/index.md');
+});
+</script>
 {% endblock %}

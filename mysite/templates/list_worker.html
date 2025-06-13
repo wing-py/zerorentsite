@@ -10,14 +10,18 @@
         <thead>
             <tr>
                 <th>用户名</th>
+                <th>称呼名</th>{# 添加称呼名表头 #}
                 <th>注册日期</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
             <tr>
                 <td>{{ user.username }}</td>
+                <td>{{ user.callname or user.username }}</td>{# 显示称呼名，如果为空则显示用户名 #}
                 <td>{{ user.created_at.strftime('%Y-%m-%d %H:%m') }}</td>
+                <td><a href="/view_user/{{ user.id }}">详情</a></td>
             </tr>
             {% endfor %}
         </tbody>
