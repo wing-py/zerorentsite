@@ -39,6 +39,23 @@ class User(db.Model):
     # 关联信函
     letters = db.relationship('Letter', backref='author', lazy=True)
 
+    def to_dict(self):
+        return {"id": self.id,
+            "username": self.username,
+            "password":self.password,
+            "email":self.email,
+            "phone":self.phone,
+            "created_at":self.created_at,
+            "real_name":self.real_name,
+            "id_card":self.id_card,
+            "qq":self.qq,
+            "wechat":self.wechat,
+            "github":self.github,
+            "wechat_openid":self.wechat_openid,
+            "qq_openid":self.qq_openid,
+            "letters":self.letters,
+            }
+
 class Letter(db.Model):
     id = db.Column(db.String(36), primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -58,11 +75,14 @@ class Order(db.Model):
     title = db.Column(db.String(200)) # title 标题
     description = db.Column(db.Text) # description 描述
     price = db.Column(db.Numeric(10, 2)) # price 佣金
+    stat = db.Column(db.String(10)) # 订单当前状态
     contact = db.Column(db.String(200)) # contact 联系
     period = db.Column(db.String(100), nullable=True) # period 工期
     when_submitted = db.Column(db.DateTime, default=datetime.now) # when 发布时间
     submiter_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False) # who 发布用户
-    submiter = db.relationship('User', backref='submitted_orders')
+    worker_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=True) # 接单用户
+
+    # submiter = db.relationship('User', backref='submitted_orders')
 
     discuss_id = db.Column(db.Integer, nullable=True) # discuss_id 讨论号
     contract = db.Column(db.Text, nullable=True) # contract 合同
@@ -72,6 +92,20 @@ class Order(db.Model):
 
     developer_evaluate_to_submiter = db.Column(db.Text, nullable=True) # developer_evaluate_to_submiter
     submiter_evaluate_to_developer = db.Column(db.Text, nullable=True) # submiter_evaluate_to_developer
+
+    def to_dict(self):
+        print(User.query.filter_by(id=self.publisher_id).first().username)
+        return {"id": self.id,
+            "name": self.title,
+            "description":self.description,
+            "price":self.price,
+            "stat":self.stat,
+            "publisher_id":self.submiter_id,
+            "publisher_name":User.query.filter_by(id=self.submiter_id).first().username,
+            "worker_id":self.worker_id,
+            "worker_name":(User.query.filter_by(id=self.worker_id).first().username if self.worker_id else ''),
+            "date":self.date,
+            }
 
 # Association table for Many-to-Many relationship
 order_undertakers = db.Table('order_undertakers',

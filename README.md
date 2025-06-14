@@ -32,3 +32,5 @@ domain_name:
 
 ## 相关资料
 https://help.pythonanywhere.com/
+
+## 对于vue分支代码，在zerorent-vue/下执行npm install安装相应工具，执行npm run build 编译代码到mysite/vue-build下
